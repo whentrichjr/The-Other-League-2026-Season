@@ -690,6 +690,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
     <div class="entry-action-row">
       <button class="btn-outlined" onclick="loadEntryGroup()">Load Group</button>
       <button class="btn-filled" id="checkout-btn" onclick="checkoutEntry()">Check Out</button>
+      <button class="btn-outlined" id="release-btn" onclick="releaseEntry()" style="display:none">Release</button>
     </div>
     <div id="entry-chips-area" class="entry-chips">
       <span class="status-chip chip-info"><span class="chip-dot"></span>Select week &amp; group</span>
@@ -745,7 +746,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
   <button class="tab" data-page="entry">
     <div class="tab-inner">
       <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <span class="tab-label">Entry</span>
+      <span class="tab-label">Cards</span>
     </div>
   </button>
   <button class="tab" data-page="skins">
@@ -783,6 +784,10 @@ var S = {
   entryLock: null,
   entryMarkerName: '',
 
+  viewerBuilt: false,
+  skinsBuilt: false,
+  entryBuilt: false,
+
   slideImages: [],
   slideIdx: 0,
   slideShowingA: true,
@@ -804,6 +809,7 @@ function sumNums(arr) {
   return t ? String(t) : '—';
 }
 function strokeLabel(n) { return n >= 2 ? '**' : n === 1 ? '*' : ''; }
+function jsStr(s) { return String(s == null ? '' : s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
 /* ── API ─────────────────────────────────────────────── */
 function gasGet(action, params) {
@@ -830,9 +836,9 @@ function switchPage(pageName) {
   document.querySelector('.tab[data-page="' + pageName + '"]').classList.add('active');
   document.querySelector('.btm-nav').style.display = pageName === 'home' ? 'none' : 'flex';
 
-  if (pageName === 'viewer' && !S.viewerInit) initViewer();
-  else if (pageName === 'skins' && !S.skinsInit) initSkins();
-  else if (pageName === 'entry' && !S.entryInit) initEntry();
+  if (pageName === 'viewer' && !S.viewerBuilt) initViewer();
+  else if (pageName === 'skins' && !S.skinsBuilt) initSkins();
+  else if (pageName === 'entry' && !S.entryBuilt) initEntry();
 }
 
 /* ── BOOT ────────────────────────────────────────────── */
@@ -915,6 +921,7 @@ el('viewer-refresh-btn').addEventListener('click', function() {
 });
 
 function initViewer() {
+  S.viewerBuilt = true;
   var container = el('viewer-content');
   container.innerHTML = '<div class="load-msg">Loading…</div>';
   var p = S.viewerInit ? Promise.resolve(S.viewerInit) : gasGet('viewerInit');
@@ -929,6 +936,7 @@ function initViewer() {
 }
 
 function buildViewerShell(res) {
+  S.viewerBuilt = true;
   var tabs = res.tabs || {};
   var weeks = tabs.weeks || [], leagues = tabs.league || [], playoffs = tabs.playoffs || [];
 
@@ -943,16 +951,16 @@ function buildViewerShell(res) {
 
   html += '<div class="week-selector" id="viewer-week-pills">';
   weeks.forEach(function(w, i) {
-    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
+    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
   });
   playoffs.forEach(function(w) {
-    html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('Playoff Week ','PO')) + '</div>';
+    html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('Playoff Week ','PO')) + '</div>';
   });
   html += '</div>';
 
   html += '<div class="week-selector" id="viewer-league-pills" style="display:none">';
   leagues.forEach(function(s, i) {
-    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + esc(s.name) + '\')">' + esc(s.name.replace('League ','')) + '</div>';
+    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + jsStr(s.name) + '\')">' + esc(s.name.replace('League ','')) + '</div>';
   });
   html += '</div>';
 
@@ -1192,12 +1200,12 @@ el('skins-refresh-btn').addEventListener('click', function() {
 });
 
 function initSkins() {
+  S.skinsBuilt = true;
   el('skins-content').innerHTML = '<div class="load-msg">Loading…</div>';
   var p = S.viewerInit ? Promise.resolve(S.viewerInit) : gasGet('viewerInit');
   p.then(function(res) {
     if (!res || !res.ok) { el('skins-content').innerHTML = '<div class="load-error">Failed to load</div>'; return; }
     S.viewerInit = res; S.skinsInit = res;
-    gasGet('skinsLocks').then(function(lr) { if (lr&&lr.ok) S.skinsLocks = lr.locks||{}; }).catch(function(){});
     buildSkinsShell(res);
     var weeks = (res.tabs && res.tabs.weeks) || [];
     if (weeks.length) loadSkinsWeek(weeks[0].name, false);
@@ -1205,10 +1213,11 @@ function initSkins() {
 }
 
 function buildSkinsShell(res) {
+  S.skinsBuilt = true;
   var weeks = (res.tabs && res.tabs.weeks) || [];
   var html = '<div class="week-selector" id="skins-week-pills">';
   weeks.forEach(function(w, i) {
-    html += '<div class="week-pill' + (i===0?' active':'') + '" data-week="' + esc(w.name) + '" onclick="loadSkinsWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
+    html += '<div class="week-pill' + (i===0?' active':'') + '" data-week="' + esc(w.name) + '" onclick="loadSkinsWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
   });
   html += '</div><div id="skins-main"></div>';
   el('skins-content').innerHTML = html;
@@ -1262,7 +1271,7 @@ function renderSkins(vm) {
       var sHcp = skinsHcp(ch), stArr = buildStrokeArray(sHcp, hcaps, pars);
       var rawArr = [], adjArr = [];
       for (var h = 0; h < H; h++) {
-        var rv = parseInt(row.scores[h], 10);
+        var rv = parseInt((row.scores || [])[h], 10);
         if (!isFinite(rv)||rv<=0) { rawArr.push(null); adjArr.push(null); }
         else { rawArr.push(rv); adjArr.push(rv - stArr[h]); }
       }
@@ -1363,6 +1372,7 @@ function renderSkins(vm) {
    ENTRY PAGE
    ════════════════════════════════════════════════════════ */
 function initEntry() {
+  S.entryBuilt = true;
   gasGet('entryInit').then(function(res) {
     if (!res || !res.ok) { el('entry-table-wrap').innerHTML = '<div class="load-error">Failed to load entry data</div>'; return; }
     S.entryInit = res;
@@ -1371,6 +1381,7 @@ function initEntry() {
 }
 
 function buildEntryControls(res) {
+  S.entryBuilt = true;
   var weeks = res.weeks || [], markers = res.markerNames || [];
 
   var weekOpts = '';
@@ -1380,6 +1391,12 @@ function buildEntryControls(res) {
   var markerOpts = '<option value="">-- Select Name --</option>';
   markers.forEach(function(m) { markerOpts += '<option value="' + esc(m) + '">' + esc(m) + '</option>'; });
   el('entry-marker-select').innerHTML = markerOpts;
+
+  var saved = localStorage.getItem('tol_marker');
+  if (saved) {
+    var opt = el('entry-marker-select').querySelector('option[value="' + saved.replace(/"/g, '\\"') + '"]');
+    if (opt) { el('entry-marker-select').value = saved; S.entryMarkerName = saved; }
+  }
 
   updateEntryCheckout();
 }
@@ -1419,15 +1436,11 @@ function renderEntryTable(res) {
   var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
   var H = holes.length;
 
-  var chipHtml = '<div class="entry-chips">';
   var lock = S.entryLock;
-  if (lock && lock.lockedBy) {
-    chipHtml += '<span class="status-chip chip-warn"><span class="chip-dot"></span>Locked by ' + esc(lock.lockedBy) + '</span>';
-  } else {
-    chipHtml += '<span class="status-chip chip-ok"><span class="chip-dot"></span>Available</span>';
-  }
+  var chipHtml = lock && lock.lockedBy
+    ? '<span class="status-chip chip-warn"><span class="chip-dot"></span>Locked by ' + esc(lock.lockedBy) + '</span>'
+    : '<span class="status-chip chip-ok"><span class="chip-dot"></span>Available</span>';
   chipHtml += '<span class="status-chip chip-info">Course: ' + esc(res.courseDisplay||'') + '</span>';
-  chipHtml += '</div>';
   el('entry-chips-area').innerHTML = chipHtml;
 
   var html = '<div class="entry-outer"><table class="entry-tbl"><thead><tr>';
@@ -1504,24 +1517,45 @@ window.toggleAbsentRow = function(i, absent) {
 
 window.onMarkerChange = function() {
   S.entryMarkerName = el('entry-marker-select').value;
+  if (S.entryMarkerName) localStorage.setItem('tol_marker', S.entryMarkerName);
   updateEntryCheckout();
+};
+
+window.releaseEntry = function() {
+  if (!S.entryCurrentWeek || !S.entryCurrentGroup || !S.entryMarkerName) return;
+  var btn = el('release-btn');
+  if (btn) { btn.textContent = 'Releasing…'; btn.disabled = true; }
+  gasGet('releaseLock', {sheet: S.entryCurrentWeek, group: S.entryCurrentGroup, marker: S.entryMarkerName}).then(function() {
+    S.entryLock = null;
+    updateEntryCheckout();
+    el('entry-chips-area').innerHTML = '<span class="status-chip chip-info"><span class="chip-dot"></span>Lock released</span>';
+  }).catch(function(err) {
+    if (btn) { btn.textContent = 'Release'; btn.disabled = false; }
+    alert('Error releasing lock: ' + String(err));
+  });
 };
 
 function updateEntryCheckout() {
   var name = el('entry-marker-select') ? el('entry-marker-select').value : '';
   S.entryMarkerName = name;
-  var btn = el('checkout-btn');
+  var btn = el('checkout-btn'), releaseBtn = el('release-btn'), submitBtn = el('btn-submit-scores');
   if (!btn) return;
   var lock = S.entryLock;
+  var checkedOut = !!(lock && lock.lockedBy === name);
   if (!name) {
     btn.textContent = 'Check Out'; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
-  } else if (lock && lock.lockedBy === name) {
-    btn.textContent = '✓ Checked Out'; btn.disabled = false; btn.style.opacity = '1'; btn.style.background = 'var(--accent)';
+    if (releaseBtn) releaseBtn.style.display = 'none';
+  } else if (checkedOut) {
+    btn.textContent = '✓ Checked Out'; btn.disabled = true; btn.style.opacity = '1'; btn.style.background = 'var(--accent)';
+    if (releaseBtn) releaseBtn.style.display = '';
   } else if (lock && lock.lockedBy) {
     btn.textContent = 'Locked by ' + lock.lockedBy; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
+    if (releaseBtn) releaseBtn.style.display = 'none';
   } else {
     btn.textContent = 'Check Out'; btn.disabled = !S.entryGroupData; btn.style.opacity = S.entryGroupData ? '1' : '0.5'; btn.style.background = '';
+    if (releaseBtn) releaseBtn.style.display = 'none';
   }
+  if (submitBtn) submitBtn.disabled = !checkedOut;
 }
 
 window.checkoutEntry = function() {
@@ -1538,13 +1572,13 @@ window.checkoutEntry = function() {
     }
     S.entryLock = res.lock;
     updateEntryCheckout();
-    el('entry-chips-area').innerHTML = '<div class="entry-chips"><span class="status-chip chip-ok"><span class="chip-dot"></span>Checked out as ' + esc(name) + '</span></div>';
+    el('entry-chips-area').innerHTML = '<span class="status-chip chip-ok"><span class="chip-dot"></span>Checked out as ' + esc(name) + '</span>';
   }).catch(function(err) { btn.disabled = false; updateEntryCheckout(); alert('Error: ' + String(err)); });
 };
 
 window.submitScores = function() {
   if (!S.entryCurrentWeek || !S.entryCurrentGroup || !S.entryGolfers) { alert('Please load a group first.'); return; }
-  if (!S.entryMarkerName) { alert('Please check out first (select your name and tap Check Out).'); return; }
+  if (!S.entryMarkerName || !S.entryLock || S.entryLock.lockedBy !== S.entryMarkerName) { alert('Please check out first before submitting.'); return; }
 
   var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
   var golfers = S.entryGroupData ? (S.entryGroupData.golfers||[]) : [];
@@ -1582,9 +1616,10 @@ window.submitScores = function() {
     if (res && res.ok) {
       btn.textContent = 'Submitted! ✓'; btn.style.background = '#0d6532';
       S.entryLock = null;
+      updateEntryCheckout();
       delete S.viewerWeekData[S.entryCurrentWeek];
       delete S.skinsData[S.entryCurrentWeek];
-      setTimeout(function() { btn.textContent = 'Submit Scorecard'; btn.style.background = ''; btn.disabled = false; }, 3000);
+      setTimeout(function() { btn.textContent = 'Submit Scorecard'; btn.style.background = ''; }, 3000);
     } else {
       btn.textContent = 'Submit Scorecard'; btn.disabled = false;
       alert('Error: ' + (res&&res.error||'Unknown error'));

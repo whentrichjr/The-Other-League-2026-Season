@@ -1,263 +1,1607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0f7a3a">
-  <title>The Other League - 2026</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.svg">
-  <meta name="apple-mobile-web-app-title" content="Other League">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <script>
-    /* If already installed as standalone PWA, load GAS in a full-screen iframe.
-       This keeps the page on the GitHub Pages origin (in-scope), avoiding the Chrome Custom Tab bar. */
-    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-      document.documentElement.classList.add('standalone-mode');
-    }
-  </script>
-  <style>
-    :root {
-      --bg:#050914; --card:#0d1628; --border:#1e2d4a;
-      --accent:#0f7a3a; --accent-dk:#0c642f; --accent-glow:rgba(15,122,58,0.22);
-      --text:#e8eefc; --text-muted:rgba(232,238,252,0.70); --text-dim:rgba(232,238,252,0.35);
-      --success:#7dffa7;
-      --font:'Inter',system-ui,-apple-system,sans-serif;
-      --r:12px; --r-lg:16px; --r-full:9999px;
-      --sp1:8px; --sp2:16px; --sp3:24px; --sp4:32px;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{-webkit-text-size-adjust:100%}
-    body{
-      font-family:var(--font);font-size:16px;color:var(--text);background:var(--bg);
-      min-height:100dvh;display:flex;align-items:center;justify-content:center;
-      padding:var(--sp3) var(--sp2);text-align:center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f7a3a">
+<meta name="apple-mobile-web-app-title" content="Other League">
+<title>The Other League - 2026</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050914;
+  --card: #0d1628;
+  --card2: #0a1120;
+  --card3: #111f35;
+  --border: #1e2d4a;
+  --border2: #263d5e;
+  --accent: #0f7a3a;
+  --accent-glow: rgba(15,122,58,0.18);
+  --accent-lt: rgba(15,122,58,0.12);
+  --accent-mid: #0d6532;
+  --gold: #f6c343;
+  --gold-dim: rgba(246,195,67,0.12);
+  --gold-border: rgba(246,195,67,0.30);
+  --text: #e8eefc;
+  --text-muted: rgba(232,238,252,0.65);
+  --text-dim: rgba(232,238,252,0.30);
+  --success: #7dffa7;
+  --error: #ff6b6b;
+  --absent-color: #f6c343;
+  --absent-bg: rgba(246,195,67,0.08);
+  --sp1: 8px;
+  --sp2: 16px;
+  --sp3: 24px;
+  --sp4: 32px;
+  --nav-h: 68px;
+  --r: 10px;
+  --r-lg: 16px;
+  --r-full: 9999px;
+}
 
-    .wrap{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:var(--sp3)}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Icon */
-    .app-icon{
-      width:96px;height:96px;border-radius:22px;
-      background:var(--accent);display:flex;align-items:center;justify-content:center;
-      box-shadow:0 12px 40px rgba(15,122,58,0.45);
-    }
-    .app-icon svg{width:56px;height:56px}
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
 
-    /* Title block */
-    .title-block{display:flex;flex-direction:column;align-items:center;gap:var(--sp1)}
-    .app-name{font-size:28px;font-weight:900;letter-spacing:0.3px;text-transform:uppercase}
-    .season-tag{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:5px 14px;border-radius:var(--r-full);
-      background:rgba(15,122,58,0.18);border:1px solid rgba(15,122,58,0.45);
-      color:var(--success);font-size:14px;font-weight:700;
-    }
-    .app-desc{font-size:15px;color:var(--text-muted);line-height:1.6;max-width:320px}
+/* ── PAGE SHELL ── */
+.page {
+  display: none;
+  height: calc(100dvh - var(--nav-h));
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.page.active { display: block; }
+#page-home { height: 100dvh; }
 
-    /* Install card */
-    .install-card{
-      width:100%;background:var(--card);border:1px solid var(--border);
-      border-radius:var(--r-lg);padding:var(--sp3);
-    }
-    .install-card h2{font-size:17px;font-weight:700;margin-bottom:var(--sp1)}
-    .install-card .sub{font-size:14px;color:var(--text-muted);margin-bottom:var(--sp3);line-height:1.5}
+/* ── BOTTOM NAV ── */
+.btm-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: #0a1120;
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+  gap: 4px;
+  z-index: 200;
+}
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+  background: none;
+  border: none;
+  user-select: none;
+}
+.tab-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  width: 100%;
+  transition: background 0.2s, color 0.2s;
+  color: var(--text-dim);
+}
+.tab.active .tab-inner {
+  background: rgba(15,122,58,0.20);
+  color: var(--success);
+}
+.tab-inner svg {
+  width: 22px; height: 22px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.tab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
 
-    /* Android install button */
-    .btn-install{
-      width:100%;padding:16px;background:var(--accent);color:#fff;
-      border:none;border-radius:var(--r-lg);font-family:var(--font);
-      font-size:16px;font-weight:700;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      min-height:52px;transition:background .15s;
-    }
-    .btn-install:hover{background:var(--accent-dk)}
-    #androidInstall{display:none}
+/* ════════════════════════════════════
+   HOME PAGE SLIDESHOW
+   ════════════════════════════════════ */
+.home-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.home-hero .bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  will-change: opacity, transform;
+  transform: scale(1.08);
+  filter: saturate(1.06) contrast(1.06) brightness(0.9);
+}
+.home-hero .bg-layer.show { opacity: 1; }
+.home-hero .bg-layer.kb { animation: kb 18s ease-in-out infinite alternate; }
+@keyframes kb {
+  0%   { transform: scale(1.10) translate3d(-1.2%, -1.0%, 0); }
+  50%  { transform: scale(1.18) translate3d(0.6%, -0.4%, 0); }
+  100% { transform: scale(1.24) translate3d(1.2%, 1.0%, 0); }
+}
+.home-hero .overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(900px 520px at 50% 35%, rgba(0,0,0,0.08), rgba(0,0,0,0.58) 70%),
+    linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.72));
+}
 
-    /* iOS steps */
-    #iosSteps{display:none}
-    .steps{display:flex;flex-direction:column;gap:var(--sp2);text-align:left;margin-top:var(--sp1)}
-    .step{display:flex;align-items:flex-start;gap:var(--sp2)}
-    .step-num{
-      flex-shrink:0;width:28px;height:28px;border-radius:50%;
-      background:rgba(15,122,58,0.25);border:1px solid rgba(15,122,58,0.5);
-      color:var(--success);font-size:13px;font-weight:700;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .step-text{font-size:14px;color:var(--text-muted);line-height:1.5;padding-top:4px}
-    .step-text strong{color:var(--text);font-weight:700}
+/* ════════════════════════════════════
+   PAGE 1: HOME
+   ════════════════════════════════════ */
+#page-home {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp2);
+  position: relative;
+}
 
-    /* Share icon inline */
-    .share-icon{display:inline-block;vertical-align:middle;margin:0 2px}
+.season-chip {
+  position: absolute;
+  top: var(--sp2);
+  right: var(--sp2);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+  color: var(--gold);
+  border: 1px solid var(--gold-border);
+  background: var(--gold-dim);
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  z-index: 2;
+}
 
-    /* Generic fallback */
-    #genericSteps{display:none}
+.home-card {
+  background: rgba(13,22,40,0.82);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  padding: var(--sp3) var(--sp3) var(--sp2);
+  width: 100%;
+  max-width: 420px;
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    0 0 0 0.5px rgba(15,122,58,0.12),
+    0 24px 60px rgba(0,0,0,0.55),
+    0 8px 20px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(232,238,252,0.06);
+  position: relative;
+  z-index: 2;
+}
 
-    /* Divider */
-    .divider{
-      display:flex;align-items:center;gap:var(--sp2);
-      color:var(--text-dim);font-size:13px;margin:var(--sp2) 0;
-    }
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.home-title-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: var(--sp3); }
+.home-title {
+  font-family: 'Playfair Display', serif; font-weight: 900; font-size: 32px;
+  letter-spacing: -0.5px; color: var(--text); text-align: center; line-height: 1.15;
+}
+.home-title-divider { width: 40px; height: 2px; background: var(--gold); border-radius: 2px; margin: 10px auto 8px; opacity: 0.85; }
+.home-subtitle { font-size: 13px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.1px; }
 
-    /* Open in browser link */
-    .open-link{
-      display:inline-flex;align-items:center;gap:6px;
-      font-size:14px;color:var(--text-muted);text-decoration:none;
-      padding:12px 20px;border-radius:var(--r-full);
-      border:1px solid var(--border);transition:border-color .15s,color .15s;
-    }
-    .open-link:hover{border-color:var(--accent);color:var(--text)}
+.home-nav-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--sp2); }
 
-    .footer{font-size:12px;color:var(--text-dim);line-height:1.6}
+.home-nav-item {
+  display: flex; align-items: center; gap: var(--sp2);
+  background: var(--card2); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 14px var(--sp2); cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative; overflow: hidden;
+}
+.home-nav-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); border-radius: 0 2px 2px 0;
+}
+.home-nav-item:hover, .home-nav-item:active { transform: scale(0.98); border-color: var(--border2); background: var(--card3); }
 
-    /* Standalone PWA iframe mode — hides install page, shows full-screen GAS frame */
-    #app-frame{
-      display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-      border:none;background:var(--bg);z-index:9999;
-    }
-    html.standalone-mode .wrap{display:none!important}
-    html.standalone-mode #app-frame{display:block}
-  </style>
+.home-nav-icon {
+  width: 40px; height: 40px; background: var(--accent-lt); border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.home-nav-icon svg { width: 20px; height: 20px; stroke: var(--success); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.home-nav-text { flex: 1; min-width: 0; }
+.home-nav-label { font-size: 14px; font-weight: 700; color: var(--text); display: block; }
+.home-nav-sub { font-size: 11px; color: var(--text-dim); display: block; margin-top: 1px; letter-spacing: 0.1px; }
+.home-nav-chevron svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.home-status-bar { display: flex; align-items: center; gap: 8px; padding: 10px var(--sp2); border-top: 1px solid var(--border); margin-top: 2px; }
+.home-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); flex-shrink: 0; box-shadow: 0 0 6px rgba(125,255,167,0.6); }
+.home-status-text { font-size: 12px; color: var(--text-muted); }
+
+/* ════════════════════════════════════
+   SHARED: STICKY PAGE HEADER
+   ════════════════════════════════════ */
+.page-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,17,32,0.96); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  height: 56px; display: flex; align-items: center; padding: 0 var(--sp2); gap: var(--sp2);
+}
+.page-header-title { font-size: 17px; font-weight: 700; color: var(--text); flex: 1; }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--card2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.icon-btn:hover { background: var(--card3); border-color: var(--border2); }
+.icon-btn svg { width: 16px; height: 16px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── Week selector ── */
+.week-selector {
+  display: flex; gap: 6px; padding: 12px var(--sp2);
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.week-selector::-webkit-scrollbar { display: none; }
+.week-pill {
+  flex-shrink: 0; padding: 6px 12px; border-radius: var(--r-full);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card2); color: var(--text-muted);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s; white-space: nowrap;
+}
+.week-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.week-pill:hover:not(.active) { background: var(--card3); border-color: var(--border2); }
+
+/* ── Viewer mode tabs ── */
+.viewer-mode-row { display: flex; gap: 8px; padding: 0 var(--sp2) 12px; }
+.v-mode-btn {
+  padding: 7px 16px; border-radius: var(--r-full);
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text-muted); font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.v-mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Course meta bar ── */
+.course-meta {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 var(--sp2) 12px; flex-wrap: wrap;
+}
+.meta-badge {
+  font-size: 11px; color: var(--text-muted);
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-full); padding: 3px 8px;
+  font-weight: 600; white-space: nowrap;
+}
+
+/* ── Group accordion ── */
+.group-accordion { margin: 0 var(--sp2) var(--sp2); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.group-toggle {
+  display: flex; align-items: center; gap: var(--sp1);
+  padding: 14px var(--sp2); background: var(--card);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.group-toggle:hover { background: var(--card3); }
+.group-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.group-members { font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-chevron { flex-shrink: 0; transition: transform 0.2s; }
+.group-chevron svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.group-accordion.open .group-chevron { transform: rotate(90deg); }
+.group-body { display: none; border-top: 1px solid var(--border); }
+.group-accordion.open .group-body { display: block; }
+
+/* ════════════════════════════════════
+   SHARED: SCORECARD TABLE
+   ════════════════════════════════════ */
+.scorecard-outer { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.scorecard-outer::-webkit-scrollbar { height: 4px; }
+.scorecard-outer::-webkit-scrollbar-track { background: transparent; }
+.scorecard-outer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.scorecard-tbl {
+  border-collapse: separate; border-spacing: 0;
+  width: 100%; min-width: 640px; font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.scorecard-tbl th, .scorecard-tbl td {
+  border-bottom: 1px solid rgba(30,45,74,0.6);
+  border-right: 1px solid rgba(30,45,74,0.4);
+  padding: 0; vertical-align: middle;
+}
+.scorecard-tbl th:last-child, .scorecard-tbl td:last-child { border-right: none; }
+
+.col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 110px; max-width: 110px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 8px; }
+.col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 56px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.col-hole { min-width: 44px; text-align: center; padding: 4px 2px; }
+
+.tbl-header-row th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; }
+.tbl-header-row th.col-name { background: var(--card2); text-align: left; }
+.tbl-header-row th.col-tot { background: var(--card2); }
+
+.tbl-hcp-row td, .tbl-par-row td { height: 26px; font-size: 11px; font-weight: 600; text-align: center; color: var(--text-dim); background: rgba(13,22,40,0.9); }
+.tbl-par-row td { color: var(--text-muted); }
+.tbl-hcp-row td.col-name, .tbl-par-row td.col-name { text-align: left; padding-left: 8px; background: var(--card); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.tbl-hcp-row td.col-tot, .tbl-par-row td.col-tot { background: var(--card); }
+
+.tbl-section-row td { height: 28px; background: rgba(15,122,58,0.10); color: var(--accent); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; text-align: center; font-variant: small-caps; border-bottom: 1px solid rgba(15,122,58,0.2); }
+
+.tbl-player-row td { height: 52px; background: var(--card); }
+.tbl-player-row:hover td { background: var(--card3); }
+
+.player-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 6px 8px; }
+.player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-meta { font-size: 10px; color: var(--text-dim); line-height: 1.2; margin-top: 1px; }
+
+.badge { display: inline-flex; align-items: center; padding: 1px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
+.badge-a { background: var(--accent-lt); color: var(--success); }
+.badge-b { background: rgba(15,101,50,0.12); color: #5ec987; }
+.badge-abs { background: var(--absent-bg); color: var(--absent-color); border: 1px solid var(--gold-border); }
+
+.score-cell { text-align: center; vertical-align: middle; }
+.sc-gross { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1; position: relative; display: inline-block; }
+.sc-net { font-size: 10px; font-weight: 600; color: var(--success); line-height: 1; margin-top: 3px; }
+.stroke-mark { color: var(--gold); font-size: 10px; font-weight: 900; vertical-align: super; line-height: 0; position: relative; top: -1px; }
+.absent-row td { background: rgba(246,195,67,0.04) !important; }
+.absent-row td.col-name, .absent-row td.col-tot { background: rgba(246,195,67,0.06) !important; }
+
+.tot-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 2px; padding: 4px; }
+.tot-gross { font-size: 13px; font-weight: 900; color: var(--text); line-height: 1; }
+.tot-net { font-size: 10px; font-weight: 600; color: var(--success); line-height: 1; }
+
+.tbl-pts-row td { height: 36px; background: rgba(13,22,40,0.8); text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.tbl-pts-row td.col-name { text-align: left; padding-left: 8px; color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; background: var(--card); }
+.tbl-pts-row td.col-tot { background: var(--card); }
+
+/* ════════════════════════════════════
+   PAGE 2: VIEWER
+   ════════════════════════════════════ */
+#page-viewer { background: var(--bg); }
+.viewer-content { padding-bottom: var(--sp3); }
+
+/* League table */
+.league-tbl { border-collapse: separate; border-spacing: 0; font-size: 12px; width: 100%; }
+.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 4px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.league-tbl td { padding: 5px 8px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); }
+.league-tbl tr:nth-child(even) td { background: rgba(13,22,40,0.5); }
+
+/* ════════════════════════════════════
+   PAGE 3: SCORE ENTRY
+   ════════════════════════════════════ */
+#page-entry { background: var(--bg); }
+
+.entry-controls {
+  position: sticky; top: 56px; z-index: 90;
+  background: rgba(10,17,32,0.98); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  padding: var(--sp2);
+}
+.entry-dropdowns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.select-wrap { display: flex; flex-direction: column; gap: 3px; }
+.select-label { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.styled-select {
+  background: var(--card2); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-size: 12px; font-weight: 600; padding: 7px 8px;
+  font-family: 'Inter', sans-serif; appearance: none; -webkit-appearance: none; cursor: pointer; width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='rgba(232,238,252,0.3)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
+}
+.styled-select:focus { outline: none; border-color: var(--accent); }
+
+.entry-action-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.btn-outlined {
+  flex: 1; padding: 9px 12px; border-radius: var(--r);
+  border: 1px solid var(--border2); background: transparent; color: var(--text-muted);
+  font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.btn-outlined:hover { background: var(--card3); border-color: var(--border2); }
+.btn-filled {
+  flex: 1; padding: 7px 12px; border-radius: var(--r);
+  border: 1px solid rgba(15,122,58,0.5); background: rgba(15,122,58,0.12);
+  color: var(--success); font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer;
+  transition: background 0.15s, transform 0.1s; -webkit-tap-highlight-color: transparent;
+}
+.btn-filled:hover { background: rgba(15,122,58,0.22); }
+.btn-filled:active { transform: scale(0.98); }
+.btn-filled:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.entry-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.status-chip { display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--r-full); font-size: 11px; font-weight: 600; border: 1px solid transparent; }
+.chip-ok { background: var(--accent-lt); color: var(--success); border-color: rgba(15,122,58,0.3); }
+.chip-warn { background: var(--absent-bg); color: var(--absent-color); border-color: var(--gold-border); }
+.chip-info { background: var(--card2); color: var(--text-muted); border-color: var(--border); }
+.chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+.entry-table-wrap { padding: var(--sp2); padding-top: 0; }
+.entry-outer { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.entry-outer::-webkit-scrollbar { height: 4px; }
+.entry-outer::-webkit-scrollbar-track { background: transparent; }
+.entry-outer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.entry-tbl { border-collapse: separate; border-spacing: 0; min-width: 660px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.entry-tbl th, .entry-tbl td { border-bottom: 1px solid rgba(30,45,74,0.6); border-right: 1px solid rgba(30,45,74,0.4); padding: 0; vertical-align: middle; }
+.entry-tbl th:last-child, .entry-tbl td:last-child { border-right: none; }
+
+.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 120px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 52px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-hole { min-width: 46px; text-align: center; }
+
+.entry-tbl thead th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; text-align: center; }
+.entry-tbl thead th.entry-col-name { text-align: left; }
+.entry-tbl .e-hcp-row td, .entry-tbl .e-par-row td { height: 24px; font-size: 10px; font-weight: 600; text-align: center; color: var(--text-dim); background: rgba(13,22,40,0.9); }
+.entry-tbl .e-par-row td { color: var(--text-muted); }
+.entry-tbl .e-hcp-row td.entry-col-name, .entry-tbl .e-par-row td.entry-col-name { text-align: left; padding-left: 8px; background: var(--card); font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
+.entry-tbl .e-hcp-row td.entry-col-tot, .entry-tbl .e-par-row td.entry-col-tot { background: var(--card); }
+.entry-tbl .e-player-row td { background: var(--card); height: 60px; }
+
+.entry-name-cell { display: flex; flex-direction: column; gap: 6px; padding: 8px; height: 100%; justify-content: center; }
+.entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
+.absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
+.toggle-input { display: none; }
+.toggle-track { width: 36px; height: 22px; border-radius: 11px; background: var(--border2); position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+.toggle-track::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.toggle-input:checked + .toggle-track { background: var(--accent); }
+.toggle-input:checked + .toggle-track::before { transform: translateX(14px); }
+
+.score-inp {
+  width: 40px; height: 42px; background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); text-align: center; font-size: 18px;
+  font-weight: 700; font-variant-numeric: tabular-nums; font-family: 'Inter', sans-serif;
+  display: block; margin: 0 auto; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.score-inp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(15,122,58,0.2); outline: none; }
+.score-inp.absent { background: var(--absent-bg); border-color: var(--gold-border); color: var(--absent-color); }
+
+.e-tot-cell { text-align: center; padding: 4px; font-size: 14px; font-weight: 900; color: var(--text); }
+.e-tot-absent { color: var(--absent-color); }
+
+.absent-banner { margin: 0 var(--sp2) var(--sp2); padding: 12px 14px; background: var(--absent-bg); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; display: flex; align-items: flex-start; gap: 8px; }
+.absent-banner-text { font-size: 12px; color: var(--absent-color); font-weight: 600; line-height: 1.45; }
+
+.submit-footer {
+  position: sticky; bottom: 0; z-index: 100;
+  background: rgba(13,22,40,0.96); border-top: 1px solid var(--border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  padding: 16px var(--sp2); display: flex; flex-direction: column; gap: 10px;
+}
+.submit-footer-info { display: flex; align-items: center; justify-content: space-between; }
+.submit-footer-label { font-size: 13px; font-weight: 700; color: var(--text); }
+.submit-footer-status { font-size: 12px; color: var(--success); font-weight: 600; }
+.btn-submit {
+  width: 100%; padding: 16px; border-radius: var(--r-lg); border: none;
+  background: var(--accent); color: #fff; font-size: 16px; font-weight: 700;
+  font-family: 'Inter', sans-serif; cursor: pointer;
+  transition: background 0.15s, transform 0.1s; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 20px rgba(15,122,58,0.4);
+}
+.btn-submit:hover { background: var(--accent-mid); }
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ════════════════════════════════════
+   PAGE 4: SKINS
+   ════════════════════════════════════ */
+#page-skins { background: var(--bg); }
+
+.lock-banner {
+  display: flex; align-items: center; gap: var(--sp1);
+  padding: 12px 16px; border-radius: var(--r);
+  margin: 0 var(--sp2) var(--sp2);
+  background: rgba(15,122,58,0.15); border: 1px solid rgba(15,122,58,0.45);
+  color: var(--success); font-size: 14px; font-weight: 700;
+}
+.lock-banner svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; }
+.lock-meta { font-size: 12px; font-weight: 400; opacity: .8; margin-left: 4px; }
+
+.skins-summary-section { padding: 0 var(--sp2) var(--sp2); }
+.skins-summary { margin-top: var(--sp2); padding: var(--sp2); background: #0a1422; border: 1px solid var(--border); border-radius: var(--r-lg); }
+.sum-header { font-weight: 900; color: var(--success); font-size: 16px; margin-bottom: var(--sp2); padding-bottom: 10px; border-bottom: 1px solid rgba(15,122,58,0.35); }
+.skin-wins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp1); }
+.skin-win-card { background: rgba(15,122,58,0.10); border: 1px solid rgba(15,122,58,0.30); border-radius: var(--r); padding: 14px; }
+.swc-hole { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 4px; }
+.swc-winner { font-size: 17px; font-weight: 900; color: var(--success); margin-bottom: 2px; line-height: 1.2; }
+.swc-score { font-size: 13px; color: var(--text-muted); }
+
+.course-meta.skins-meta {
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  padding: 10px 14px; margin: 0 var(--sp2) var(--sp2);
+  background: #0a1422; border: 1px solid var(--border); border-radius: var(--r); font-size: 14px;
+}
+.course-meta.skins-meta strong { font-size: 16px; color: #9ad1ff; font-weight: 700; }
+.cm-sep { opacity: .3; margin: 0 2px; }
+.cm-val { font-weight: 700; }
+.key-box { margin: 0 var(--sp2) var(--sp2); background: #0a1422; border: 1px solid var(--border); border-radius: var(--r); padding: 14px; font-size: 13px; line-height: 1.7; }
+.key-row { display: flex; gap: var(--sp1); margin-bottom: 2px; flex-wrap: wrap; }
+.key-lbl { font-weight: 700; color: #9ad1ff; min-width: 140px; flex-shrink: 0; }
+
+.skins-tbl-wrap { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin: 0 var(--sp2) var(--sp2); }
+table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; min-width: 820px; }
+.skins-grid th, .skins-grid td { border-bottom: 1px solid var(--border); padding: 0; text-align: center; color: var(--text); vertical-align: middle; }
+.skins-grid col.cGolfer { width: 170px; } .skins-grid col.cInfo { width: 90px; }
+.skins-grid col.cHole { width: 54px; } .skins-grid col.cTotal { width: 60px; }
+.skins-grid thead tr.hRow th { background: #132140; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
+.skins-grid thead tr.pRow th { background: #0f1830; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
+.skins-grid thead tr.lRow th { background: #17295a; font-size: 13px; padding: 8px 5px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
+.hcp-lbl, .par-lbl { text-align: right !important; padding-right: 8px !important; white-space: nowrap !important; }
+.skins-grid th.cGolfer, .skins-grid td.cGolfer { text-align: left; padding-left: 10px; }
+.skins-grid td.cInfo { font-size: 12px; color: #9ad1ff; padding: 4px 6px; }
+.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px 2px; min-height: 48px; }
+.sGross { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.sNet { font-size: 13px; line-height: 1.4; color: var(--success); font-weight: 900; }
+.mk { color: var(--gold); font-size: 10px; vertical-align: super; line-height: 0; font-weight: 900; margin-left: 1px; }
+.sNet .mk { color: var(--gold); }
+.sEmpty { opacity: .3; font-size: 13px; }
+.skins-grid tbody tr.golfer-row:nth-child(odd)  td { background: #0f1a34; }
+.skins-grid tbody tr.golfer-row:nth-child(even) td { background: #13203f; }
+.skins-grid tbody tr.golfer-row td.cGolfer { background: #0d1628; }
+.skins-grid td.winner { background: rgba(15,122,58,0.38) !important; color: var(--success) !important; font-weight: 900; }
+.skins-grid tbody tr:not(.tot-row) td.winner { border: 2px solid rgba(255,255,255,0.6) !important; border-radius: 4px; }
+.skins-grid td.push { background: rgba(246,195,67,0.14) !important; }
+.skins-grid td.winner .sNet { color: #fff; }
+.skins-grid td.push .sNet { color: var(--gold); }
+.skins-grid tr.tot-row td { background: #0d1628 !important; font-weight: 900; border-top: 2px solid var(--accent); padding: 9px 5px; font-size: 14px; }
+.skins-grid tr.tot-row td.cGolfer { color: var(--success); }
+
+.skins-legend { display: flex; gap: var(--sp3); flex-wrap: wrap; align-items: center; margin: 0 var(--sp2) var(--sp3); font-size: 13px; color: var(--text-muted); }
+.skins-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-win { background: var(--accent); } .dot-push { background: var(--gold); }
+.mk-demo { color: var(--gold); font-weight: 900; font-size: 12px; }
+
+/* ── Loading states ── */
+.load-msg { padding: var(--sp3); text-align: center; color: var(--text-muted); font-size: 14px; }
+.load-error { padding: var(--sp3); text-align: center; color: var(--error); font-size: 14px; }
+
+/* ── Spacing ── */
+.mt1 { margin-top: var(--sp1); }
+.mt2 { margin-top: var(--sp2); }
+.pb3 { padding-bottom: var(--sp3); }
+</style>
 </head>
 <body>
 
-<!-- Full-screen iframe used in standalone PWA mode -->
-<iframe id="app-frame" src="" allowfullscreen></iframe>
-
-<div class="wrap">
-
-  <div class="app-icon">
-    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="28" y1="10" x2="28" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
-      <polygon points="28,10 43,18 28,26" fill="white"/>
-      <ellipse cx="28" cy="46" rx="9" ry="3" fill="rgba(255,255,255,0.2)"/>
-    </svg>
+<!-- ═══════════════════════════════════
+     PAGE 1: HOME
+     ═══════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <!-- Slideshow background -->
+  <div class="home-hero">
+    <div class="bg-layer show kb" id="bgA"></div>
+    <div class="bg-layer kb" id="bgB"></div>
+    <div class="overlay"></div>
   </div>
 
-  <div class="title-block">
-    <div class="app-name">The Other League</div>
-    <div class="season-tag">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      2026 Season
-    </div>
-    <p class="app-desc">Standings, score entry, and skins — all in one place.</p>
-  </div>
+  <div class="season-chip" id="home-season-chip">2026</div>
 
-  <div class="install-card">
-    <h2>Install the App</h2>
-    <p class="sub">Add to your home screen for quick access every week — no app store required.</p>
-
-    <!-- Android: native install prompt -->
-    <div id="androidInstall">
-      <button class="btn-install" id="installBtn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Install The Other League
-      </button>
+  <div class="home-card">
+    <div class="home-title-wrap">
+      <div class="home-title">The Other League</div>
+      <div class="home-title-divider"></div>
+      <div class="home-subtitle" id="home-subtitle">Weekly Golf League &middot; 2026 Season</div>
     </div>
 
-    <!-- iOS: step-by-step instructions -->
-    <div id="iosSteps">
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text">Tap the
-            <svg class="share-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-            <strong>Share</strong> button at the bottom of Safari</div>
+    <div class="home-nav-list">
+      <div class="home-nav-item" onclick="switchPage('viewer')">
+        <div class="home-nav-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
         </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text">Scroll down and tap <strong>Add to Home Screen</strong></div>
+        <div class="home-nav-text">
+          <span class="home-nav-label">League Viewer</span>
+          <span class="home-nav-sub">Standings &middot; Scores &middot; Points</span>
         </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text">Tap <strong>Add</strong> — the league icon will appear on your home screen</div>
+        <div class="home-nav-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="home-nav-item" onclick="switchPage('entry')">
+        <div class="home-nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
+        <div class="home-nav-text">
+          <span class="home-nav-label">Score Cards</span>
+          <span class="home-nav-sub">Enter &middot; Draft &middot; Submit</span>
+        </div>
+        <div class="home-nav-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="home-nav-item" onclick="switchPage('skins')">
+        <div class="home-nav-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="home-nav-text">
+          <span class="home-nav-label">Skins</span>
+          <span class="home-nav-sub">Weekly Hole Winners</span>
+        </div>
+        <div class="home-nav-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
       </div>
     </div>
 
-    <!-- Generic fallback -->
-    <div id="genericSteps">
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text">Open this page in <strong>Safari</strong> (iPhone) or <strong>Chrome</strong> (Android)</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text">Use your browser's <strong>Add to Home Screen</strong> option</div>
-        </div>
-      </div>
+    <div class="home-status-bar">
+      <div class="home-status-dot"></div>
+      <span class="home-status-text" id="home-status-text">Loading…</span>
     </div>
-
-    <div class="divider">or</div>
-
-    <a class="open-link" href="https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Open in browser instead
-    </a>
   </div>
-
-  <p class="footer">Scores and standings live in Google Sheets.<br>Nothing is stored on this device.</p>
-
 </div>
 
+
+<!-- ═══════════════════════════════════
+     PAGE 2: VIEWER
+     ═══════════════════════════════════ -->
+<div id="page-viewer" class="page">
+  <div class="page-header">
+    <span class="page-header-title">League Viewer</span>
+    <div class="icon-btn" id="viewer-refresh-btn" title="Refresh">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.97"/></svg>
+    </div>
+  </div>
+  <div class="viewer-content" id="viewer-content">
+    <div class="load-msg">Loading…</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3: SCORE ENTRY
+     ═══════════════════════════════════ -->
+<div id="page-entry" class="page">
+  <div class="page-header">
+    <span class="page-header-title">Score Cards</span>
+  </div>
+
+  <div class="entry-controls">
+    <div class="entry-dropdowns">
+      <div class="select-wrap">
+        <label class="select-label">Week</label>
+        <select class="styled-select" id="entry-week-select"><option>Loading…</option></select>
+      </div>
+      <div class="select-wrap">
+        <label class="select-label">Group</label>
+        <select class="styled-select" id="entry-group-select">
+          <option value="1">Group 1</option><option value="2">Group 2</option>
+          <option value="3">Group 3</option><option value="4">Group 4</option>
+          <option value="5">Group 5</option><option value="6">Group 6</option>
+          <option value="7">Group 7</option>
+        </select>
+      </div>
+      <div class="select-wrap">
+        <label class="select-label">Your Name</label>
+        <select class="styled-select" id="entry-marker-select" onchange="onMarkerChange()">
+          <option value="">-- Name --</option>
+        </select>
+      </div>
+    </div>
+    <div class="entry-action-row">
+      <button class="btn-outlined" onclick="loadEntryGroup()">Load Group</button>
+      <button class="btn-filled" id="checkout-btn" onclick="checkoutEntry()">Check Out</button>
+    </div>
+    <div id="entry-chips-area" class="entry-chips">
+      <span class="status-chip chip-info"><span class="chip-dot"></span>Select week &amp; group</span>
+    </div>
+  </div>
+
+  <div class="entry-table-wrap mt2" id="entry-table-wrap">
+    <div class="load-msg">Select week and group, then tap Load Group.</div>
+  </div>
+
+  <div class="submit-footer" id="submit-footer" style="display:none">
+    <div class="submit-footer-info">
+      <div class="submit-footer-label" id="submit-footer-label">Group — Week</div>
+      <div class="submit-footer-status" id="submit-footer-status">Ready</div>
+    </div>
+    <button class="btn-submit" id="btn-submit-scores" onclick="submitScores()">Submit Scorecard</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     PAGE 4: SKINS
+     ═══════════════════════════════════ -->
+<div id="page-skins" class="page">
+  <div class="page-header">
+    <span class="page-header-title">Skins</span>
+    <div class="icon-btn" id="skins-refresh-btn" title="Refresh">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.97"/></svg>
+    </div>
+  </div>
+  <div id="skins-content">
+    <div class="load-msg">Loading…</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     BOTTOM NAV
+     ═══════════════════════════════════ -->
+<nav class="btm-nav">
+  <button class="tab active" data-page="home">
+    <div class="tab-inner">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="tab-label">Home</span>
+    </div>
+  </button>
+  <button class="tab" data-page="viewer">
+    <div class="tab-inner">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+      <span class="tab-label">Viewer</span>
+    </div>
+  </button>
+  <button class="tab" data-page="entry">
+    <div class="tab-inner">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span class="tab-label">Entry</span>
+    </div>
+  </button>
+  <button class="tab" data-page="skins">
+    <div class="tab-inner">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span class="tab-label">Skins</span>
+    </div>
+  </button>
+</nav>
+
 <script>
-(function () {
-  'use strict';
+(function() {
+'use strict';
 
-  var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
+/* ── CONFIG ─────────────────────────────────────────── */
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
-  /* Service worker */
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+/* ── STATE ──────────────────────────────────────────── */
+var S = {
+  viewerInit: null,
+  viewerWeekData: {},
+  viewerCurrentWeek: null,
+  viewerLeagueData: {},
+
+  skinsInit: null,
+  skinsCurrentWeek: null,
+  skinsData: {},
+  skinsLocks: {},
+
+  entryInit: null,
+  entryCurrentWeek: null,
+  entryCurrentGroup: null,
+  entryGroupData: null,
+  entryGolfers: null,
+  entryLock: null,
+  entryMarkerName: '',
+
+  slideImages: [],
+  slideIdx: 0,
+  slideShowingA: true,
+  slideTimer: null
+};
+
+/* ── UTILS ──────────────────────────────────────────── */
+function el(id) { return document.getElementById(id); }
+function esc(s) {
+  s = (s == null) ? '' : String(s);
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function sumNums(arr) {
+  var t = 0;
+  for (var i = 0; i < (arr||[]).length; i++) {
+    var n = Number(String(arr[i]).replace(/[^0-9.-]/g,''));
+    if (isFinite(n) && n > 0) t += n;
+  }
+  return t ? String(t) : '—';
+}
+function strokeLabel(n) { return n >= 2 ? '**' : n === 1 ? '*' : ''; }
+
+/* ── API ─────────────────────────────────────────────── */
+function gasGet(action, params) {
+  var qs = 'format=json&action=' + encodeURIComponent(action);
+  for (var k in (params || {})) {
+    if (Object.prototype.hasOwnProperty.call(params, k) && params[k] != null) {
+      qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }
+  }
+  return fetch(GAS_URL + '?' + qs).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+/* ── PAGE SWITCHING ──────────────────────────────────── */
+function switchPage(pageName) {
+  document.querySelectorAll('.page').forEach(function(p) { p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  var target = el('page-' + pageName);
+  target.style.display = pageName === 'home' ? 'flex' : 'block';
+  target.classList.add('active');
+  target.scrollTop = 0;
+  document.querySelector('.tab[data-page="' + pageName + '"]').classList.add('active');
+  document.querySelector('.btm-nav').style.display = pageName === 'home' ? 'none' : 'flex';
+
+  if (pageName === 'viewer' && !S.viewerInit) initViewer();
+  else if (pageName === 'skins' && !S.skinsInit) initSkins();
+  else if (pageName === 'entry' && !S.entryInit) initEntry();
+}
+
+/* ── BOOT ────────────────────────────────────────────── */
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() { switchPage(tab.dataset.page); });
+});
+document.querySelectorAll('.page').forEach(function(p) { p.style.display = 'none'; });
+el('page-home').style.display = 'flex';
+el('page-home').classList.add('active');
+document.querySelector('.btm-nav').style.display = 'none';
+
+/* ── SERVICE WORKER ─────────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+}
+
+/* ════════════════════════════════════════════════════════
+   HOME PAGE
+   ════════════════════════════════════════════════════════ */
+gasGet('seasonInfo').then(function(res) {
+  if (!res || !res.ok) return;
+  if (res.seasonYear) {
+    el('home-season-chip').textContent = res.seasonYear;
+    el('home-subtitle').textContent = 'Weekly Golf League · ' + res.seasonYear + ' Season';
+  }
+  var imgs = Array.isArray(res.homeImageUrls) ? res.homeImageUrls : [];
+  if (res.homePosterUrl && imgs.indexOf(res.homePosterUrl) === -1) imgs.unshift(res.homePosterUrl);
+  S.slideImages = imgs;
+  if (imgs.length) startSlideshow();
+}).catch(function() {});
+
+gasGet('viewerInit').then(function(res) {
+  if (!res || !res.ok) return;
+  S.viewerInit = res;
+  var weeks = (res.tabs && res.tabs.weeks) || [];
+  var txt = weeks.length
+    ? 'Week ' + weeks.length + ' of ' + (res.tabs.weeks.length > 12 ? res.tabs.weeks.length : 12) + ' active'
+    : 'Season in progress';
+  el('home-status-text').textContent = txt;
+}).catch(function() {
+  el('home-status-text').textContent = 'Season in progress';
+});
+
+/* ── SLIDESHOW ───────────────────────────────────────── */
+var SLIDE_MS = 8000;
+function setBg(elem, url) { elem.style.backgroundImage = url ? 'url("' + url + '")' : ''; }
+function restartKB(elem) { elem.classList.remove('kb'); void elem.offsetWidth; elem.classList.add('kb'); }
+function preloadImg(url) {
+  return new Promise(function(resolve) {
+    if (!url) return resolve(false);
+    var img = new Image();
+    img.onload = function() { resolve(true); };
+    img.onerror = function() { resolve(false); };
+    img.src = url;
+  });
+}
+function startSlideshow() {
+  var bgA = el('bgA'), bgB = el('bgB');
+  preloadImg(S.slideImages[0]).then(function() {
+    setBg(bgA, S.slideImages[0]);
+    bgA.classList.add('show'); bgB.classList.remove('show'); restartKB(bgA);
+    S.slideIdx = 1; S.slideShowingA = true;
+    clearInterval(S.slideTimer);
+    S.slideTimer = setInterval(function() {
+      var nextUrl = S.slideImages[S.slideIdx % S.slideImages.length];
+      preloadImg(nextUrl).then(function() {
+        var showEl = S.slideShowingA ? bgB : bgA, hideEl = S.slideShowingA ? bgA : bgB;
+        setBg(showEl, nextUrl); showEl.classList.add('show'); hideEl.classList.remove('show');
+        restartKB(showEl); S.slideShowingA = !S.slideShowingA; S.slideIdx++;
+      });
+    }, SLIDE_MS);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   VIEWER PAGE
+   ════════════════════════════════════════════════════════ */
+el('viewer-refresh-btn').addEventListener('click', function() {
+  var btn = this, svg = btn.querySelector('svg');
+  svg.style.transition = 'transform 0.6s ease';
+  svg.style.transform = 'rotate(360deg)';
+  setTimeout(function() { svg.style.transition = 'none'; svg.style.transform = ''; }, 700);
+  if (S.viewerCurrentWeek) {
+    delete S.viewerWeekData[S.viewerCurrentWeek];
+    loadViewerWeek(S.viewerCurrentWeek, true);
+  }
+});
+
+function initViewer() {
+  var container = el('viewer-content');
+  container.innerHTML = '<div class="load-msg">Loading…</div>';
+  var p = S.viewerInit ? Promise.resolve(S.viewerInit) : gasGet('viewerInit');
+  p.then(function(res) {
+    if (!res || !res.ok) { container.innerHTML = '<div class="load-error">Failed to load: ' + esc(res && res.error || 'No response') + '</div>'; return; }
+    S.viewerInit = res;
+    buildViewerShell(res);
+    var weeks = (res.tabs && res.tabs.weeks) || [];
+    if (weeks.length) loadViewerWeek(weeks[0].name, false);
+    else { var leagues = (res.tabs && res.tabs.league) || []; if (leagues.length) { setViewerMode('league'); loadLeaguePage(leagues[0].name); } }
+  }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function buildViewerShell(res) {
+  var tabs = res.tabs || {};
+  var weeks = tabs.weeks || [], leagues = tabs.league || [], playoffs = tabs.playoffs || [];
+
+  var html = '';
+
+  if (leagues.length) {
+    html += '<div class="viewer-mode-row">';
+    html += '<button class="v-mode-btn active" id="v-mode-week" onclick="setViewerMode(\'week\')">Scorecards</button>';
+    html += '<button class="v-mode-btn" id="v-mode-league" onclick="setViewerMode(\'league\')">League Sheets</button>';
+    html += '</div>';
   }
 
-  /* If standalone, point the iframe at GAS and stop — no install UI needed */
-  if (document.documentElement.classList.contains('standalone-mode')) {
-    document.getElementById('app-frame').src = GAS_URL;
-    return;
+  html += '<div class="week-selector" id="viewer-week-pills">';
+  weeks.forEach(function(w, i) {
+    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
+  });
+  playoffs.forEach(function(w) {
+    html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('Playoff Week ','PO')) + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="week-selector" id="viewer-league-pills" style="display:none">';
+  leagues.forEach(function(s, i) {
+    html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + esc(s.name) + '\')">' + esc(s.name.replace('League ','')) + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div id="viewer-week-container"></div>';
+  html += '<div id="viewer-league-container" style="display:none"></div>';
+
+  el('viewer-content').innerHTML = html;
+}
+
+function setViewerMode(mode) {
+  var wBtn = el('v-mode-week'), lBtn = el('v-mode-league');
+  if (wBtn) wBtn.classList.toggle('active', mode === 'week');
+  if (lBtn) lBtn.classList.toggle('active', mode === 'league');
+  var wPills = el('viewer-week-pills'), lPills = el('viewer-league-pills');
+  var wCont = el('viewer-week-container'), lCont = el('viewer-league-container');
+  if (wPills) wPills.style.display = mode === 'week' ? '' : 'none';
+  if (lPills) lPills.style.display = mode === 'league' ? '' : 'none';
+  if (wCont) wCont.style.display = mode === 'week' ? '' : 'none';
+  if (lCont) lCont.style.display = mode === 'league' ? '' : 'none';
+}
+
+function loadViewerWeek(weekName, force) {
+  document.querySelectorAll('#viewer-week-pills .week-pill').forEach(function(p) {
+    p.classList.toggle('active', p.dataset.week === weekName);
+  });
+  S.viewerCurrentWeek = weekName;
+  var container = el('viewer-week-container');
+  if (!container) return;
+
+  if (!force && S.viewerWeekData[weekName]) { renderViewerWeek(S.viewerWeekData[weekName]); return; }
+
+  container.innerHTML = '<div class="load-msg">Loading ' + esc(weekName) + '…</div>';
+  var action = force ? 'weekForce' : 'week';
+  gasGet(action, {name: weekName}).then(function(res) {
+    if (!res || !res.ok) { container.innerHTML = '<div class="load-error">Error: ' + esc(res && res.error || 'No data') + '</div>'; return; }
+    S.viewerWeekData[weekName] = res;
+    renderViewerWeek(res);
+  }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function loadLeaguePage(sheetName) {
+  document.querySelectorAll('#viewer-league-pills .week-pill').forEach(function(p) {
+    p.classList.toggle('active', p.dataset.sheet === sheetName);
+  });
+  var container = el('viewer-league-container');
+  if (!container) return;
+  if (S.viewerLeagueData[sheetName]) { renderLeagueTable(S.viewerLeagueData[sheetName]); return; }
+  container.innerHTML = '<div class="load-msg">Loading…</div>';
+  gasGet('leaguePage', {name: sheetName}).then(function(res) {
+    if (!res || !res.ok) { container.innerHTML = '<div class="load-error">Error: ' + esc(res && res.error || 'No data') + '</div>'; return; }
+    S.viewerLeagueData[sheetName] = res;
+    renderLeagueTable(res);
+  }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+/* ── Stroke distribution ── */
+function distributeStrokes(total, hcaps, pars) {
+  var H = hcaps.length, result = [], i;
+  for (i = 0; i < H; i++) result.push(0);
+  if (!total || total <= 0) return result;
+  var order = [];
+  for (i = 0; i < H; i++) {
+    var h = parseInt(String(hcaps[i]||'').replace(/[^0-9]/g,''), 10);
+    order.push({idx: i, hcp: isFinite(h) ? h : 999, par: parseInt(String(pars[i]||''), 10)});
   }
+  order.sort(function(a, b) { return a.hcp - b.hcp; });
+  var remaining = total;
+  for (i = 0; i < order.length && remaining > 0; i++) { result[order[i].idx] = 1; remaining--; }
+  for (i = 0; i < order.length && remaining > 0; i++) { if (order[i].par === 3) continue; result[order[i].idx] = 2; remaining--; }
+  return result;
+}
 
-  /* Detect platform and show the right install UI */
-  var ua = navigator.userAgent || '';
-  var isIOS = /iphone|ipad|ipod/i.test(ua);
-  var isAndroid = /android/i.test(ua);
-  var deferredPrompt = null;
+function calcAbsentProjection(ch, hcaps, pars, matchStrokes) {
+  var H = hcaps.length, i, ranked = [], gross = [], rem = parseInt(String(ch||0), 10) + 2;
+  for (i = 0; i < H; i++) { var h = parseInt(String(hcaps[i]||'').replace(/[^0-9]/g,''), 10); ranked.push({idx: i, hcp: isFinite(h) ? h : 999}); }
+  ranked.sort(function(a, b) { return a.hcp - b.hcp; });
+  for (i = 0; i < H; i++) gross.push(parseInt(String(pars[i]||''), 10) || 0);
+  for (i = 0; i < H && rem > 0; i++) { gross[ranked[i].idx] += 1; rem--; }
+  for (i = 0; i < H && rem > 0; i++) { gross[ranked[i].idx] += 1; rem--; }
+  for (i = 0; i < H && rem > 0; i++) { gross[ranked[i].idx] += 1; rem--; }
+  var strokes = distributeStrokes(matchStrokes || 0, hcaps, pars);
+  return {gross: gross, net: gross.map(function(v, i) { return v - strokes[i]; })};
+}
 
-  if (isIOS) {
-    document.getElementById('iosSteps').style.display = 'block';
-  } else {
-    /* Listen for Android/Chrome install prompt */
-    window.addEventListener('beforeinstallprompt', function (e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('androidInstall').style.display = 'block';
-    });
+function renderViewerWeek(vm) {
+  var container = el('viewer-week-container');
+  if (!container) return;
+  var holes = vm.holeLabels || [], hcaps = vm.holeHandicaps || [], pars = vm.holePars || [];
+  var M = vm.courseMeta || {}, groups = vm.groups || [], H = holes.length;
 
-    /* If prompt never fires (desktop / already installed), show generic */
-    setTimeout(function () {
-      if (!deferredPrompt && document.getElementById('androidInstall').style.display === 'none') {
-        document.getElementById('genericSteps').style.display = 'block';
+  var metaHtml = '<div class="course-meta">';
+  metaHtml += '<span class="meta-badge">' + esc(vm.courseDisplay || vm.sheetName || '') + '</span>';
+  if (M.forwardLabel || M.backLabel) metaHtml += '<span class="meta-badge">Tee: ' + esc(M.forwardLabel||'') + ' / ' + esc(M.backLabel||'') + '</span>';
+  if (M.courseRatingForward) metaHtml += '<span class="meta-badge">Rating: ' + esc(M.courseRatingForward) + '</span>';
+  if (M.slopeForward) metaHtml += '<span class="meta-badge">Slope: ' + esc(M.slopeForward) + '</span>';
+  metaHtml += '</div>';
+
+  var groupsHtml = '';
+  groups.forEach(function(G, gi) {
+    var names = (G.rows||[]).map(function(r) { return r.name; }).filter(Boolean).join(' · ');
+    groupsHtml += '<div class="group-accordion' + (gi === 0 ? ' open' : '') + '">';
+    groupsHtml += '<div class="group-toggle" onclick="toggleAccordion(this)">';
+    groupsHtml += '<span class="group-name">Group ' + esc(G.group) + '</span>';
+    groupsHtml += '<span class="group-members">' + esc(names) + '</span>';
+    groupsHtml += '<span class="group-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>';
+    groupsHtml += '</div><div class="group-body"><div class="scorecard-outer">';
+    groupsHtml += renderScorecardTable(G, holes, hcaps, pars);
+    groupsHtml += '</div></div></div>';
+  });
+
+  container.innerHTML = metaHtml + groupsHtml;
+}
+
+function renderScorecardTable(G, holes, hcaps, pars) {
+  var H = holes.length;
+  var scoreRows = G.rows || [], strokeTotals = G.strokeTotals || [];
+  var ptH = (G.points && G.points.holes) || [];
+  var ptT = (G.points && G.points.totals) || [];
+  var colSpan = H + 5;
+
+  var html = '<table class="scorecard-tbl"><colgroup>';
+  html += '<col class="col-name"><col class="col-hole"><col class="col-hole"><col class="col-hole">';
+  for (var h = 0; h < H; h++) html += '<col class="col-hole">';
+  html += '<col class="col-tot"></colgroup><thead>';
+
+  html += '<tr class="tbl-header-row"><th class="col-name">Golfer</th><th class="col-hole">Idx</th><th class="col-hole">Flt</th><th class="col-hole">Abs</th>';
+  for (var h = 0; h < H; h++) { var lbl = String(holes[h]||(h+1)).trim(); var hNum = lbl.match(/\d+/); html += '<th class="col-hole">' + (hNum ? hNum[0] : esc(lbl)) + '</th>'; }
+  html += '<th class="col-tot">Total</th></tr></thead><tbody>';
+
+  html += '<tr class="tbl-hcp-row"><td class="col-name">Hole Hcp</td><td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
+  for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc(hcaps[h]||'') + '</td>';
+  html += '<td class="col-tot"></td></tr>';
+
+  html += '<tr class="tbl-par-row"><td class="col-name">Par</td><td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
+  for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc(pars[h]||'') + '</td>';
+  html += '<td class="col-tot">' + esc(sumNums(pars)) + '</td></tr>';
+
+  html += '<tr class="tbl-section-row"><td colspan="' + colSpan + '">Strokes</td></tr>';
+
+  for (var i = 0; i < scoreRows.length; i++) {
+    var r = scoreRows[i];
+    var st = distributeStrokes(strokeTotals[i]||0, hcaps, pars);
+    var grossTot = 0, grossFilled = 0, adjTot = 0;
+    for (var h = 0; h < H; h++) { var sv = parseInt(String((r.scores&&r.scores[h])||''), 10); if (isFinite(sv)&&sv>0) { grossTot+=sv; grossFilled++; adjTot+=(sv-st[h]); } }
+    var absProj = null;
+    if (r.absent && grossFilled === 0) { var absCH = parseInt(String(r.courseHandicap||'').replace(/[^0-9]/g,''), 10); if (isFinite(absCH)) absProj = calcAbsentProjection(absCH, hcaps, pars, strokeTotals[i]||0); }
+    var isAbsRow = r.absent && grossFilled === 0;
+
+    html += '<tr class="tbl-player-row' + (isAbsRow ? ' absent-row' : '') + '">';
+    html += '<td class="col-name"><div class="player-name-cell"><span class="player-name">' + esc(r.name) + '</span>';
+    var metaParts = [];
+    if (r.courseHandicap) metaParts.push('CH' + esc(r.courseHandicap));
+    if (r.flight) metaParts.push('<span class="badge badge-' + esc((r.flight||'').toLowerCase()) + '">' + esc(r.flight) + '</span>');
+    if (r.absent) metaParts.push('<span class="badge badge-abs">ABS</span>');
+    if (metaParts.length) html += '<span class="player-meta">' + metaParts.join('&nbsp;') + '</span>';
+    html += '</div></td>';
+    html += '<td class="col-hole" style="text-align:center;font-size:11px;color:var(--text-muted);font-weight:600">' + esc(r.handicapIndex||'') + '</td>';
+    html += '<td class="col-hole" style="text-align:center;font-size:10px;color:var(--text-dim);font-weight:700">' + esc(r.flight||'') + '</td>';
+    html += '<td class="col-hole" style="text-align:center;font-size:10px;color:var(--absent-color)">' + (r.absent ? 'YES' : '') + '</td>';
+
+    for (var h = 0; h < H; h++) {
+      var stv = st[h], mk = stv > 0 ? '<span class="stroke-mark">' + strokeLabel(stv) + '</span>' : '';
+      if (absProj) {
+        var ag = absProj.gross[h], an = absProj.net[h];
+        html += '<td class="col-hole score-cell"><div class="sc-gross" style="color:var(--absent-color)">' + esc(ag) + mk + '</div>' + (stv > 0 ? '<div class="sc-net">' + esc(an) + '</div>' : '') + '</td>';
+      } else {
+        var sv2 = parseInt(String((r.scores&&r.scores[h])||''), 10);
+        if (!isFinite(sv2) || sv2 <= 0) {
+          html += '<td class="col-hole score-cell"><span style="opacity:.3;font-size:11px">—</span>' + mk + '</td>';
+        } else {
+          html += '<td class="col-hole score-cell"><div class="sc-gross">' + esc(sv2) + mk + '</div>' + (stv > 0 ? '<div class="sc-net">' + esc(sv2 - stv) + '</div>' : '') + '</td>';
+        }
       }
-    }, 800);
+    }
+
+    html += '<td class="col-tot">';
+    if (absProj) { var abgT = absProj.gross.reduce(function(a,b){return a+b;},0); var abnT = absProj.net.reduce(function(a,b){return a+b;},0); html += '<div class="tot-cell"><div class="tot-gross" style="color:var(--absent-color)">' + esc(abgT) + '</div><div class="tot-net">' + esc(abnT) + '</div></div>'; }
+    else if (grossFilled > 0) { html += '<div class="tot-cell"><div class="tot-gross">' + esc(grossTot) + '</div><div class="tot-net">' + esc(adjTot) + '</div></div>'; }
+    else { html += '<div class="tot-cell"><span style="opacity:.3">—</span></div>'; }
+    html += '</td></tr>';
   }
 
-  /* Android install button */
-  document.getElementById('installBtn').addEventListener('click', function () {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function (result) {
-      deferredPrompt = null;
-      if (result.outcome === 'accepted') {
-        setTimeout(function () { window.location.replace(GAS_URL); }, 1000);
+  if (ptH.length || ptT.length) {
+    html += '<tr class="tbl-section-row"><td colspan="' + colSpan + '">Points</td></tr>';
+    for (var i = 0; i < scoreRows.length; i++) {
+      html += '<tr class="tbl-pts-row"><td class="col-name">' + esc(scoreRows[i].name) + '</td>';
+      html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
+      for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc((ptH[i]&&ptH[i][h])||'') + '</td>';
+      html += '<td class="col-tot">' + esc(ptT[i]||'') + '</td></tr>';
+    }
+  }
+
+  html += '</tbody></table>';
+  html += '<div style="padding:8px 12px;font-size:12px;color:var(--text-dim)"><span style="color:var(--gold);font-weight:900">*</span> 1 stroke &nbsp; <span style="color:var(--gold);font-weight:900">**</span> 2 strokes &nbsp; <span style="opacity:.6">Top = gross · Bottom = net</span></div>';
+  return html;
+}
+
+function renderLeagueTable(res) {
+  var container = el('viewer-league-container');
+  if (!container) return;
+  var values = res.values || [], frozen = res.frozen || {rows:0,cols:0};
+  var rows = values.length, cols = rows ? (values[0]?values[0].length:0) : 0;
+  if (!rows||!cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+  var fr = Math.max(0, Number(frozen.rows||0));
+  var html = '<div style="overflow-x:auto;padding:var(--sp2)"><table class="league-tbl">';
+  for (var r = 0; r < rows; r++) {
+    var isH = r < Math.max(1, fr);
+    html += '<tr>';
+    for (var c = 0; c < cols; c++) {
+      var val = values[r][c] == null ? '' : String(values[r][c]);
+      var al = c === 0 ? 'text-align:left' : 'text-align:center';
+      if (isH) html += '<th style="' + al + '">' + esc(val) + '</th>';
+      else html += '<td style="' + al + '">' + esc(val) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</table></div>';
+  container.innerHTML = html;
+}
+
+window.toggleAccordion = function(toggle) {
+  toggle.parentElement.classList.toggle('open');
+};
+
+/* ════════════════════════════════════════════════════════
+   SKINS PAGE
+   ════════════════════════════════════════════════════════ */
+el('skins-refresh-btn').addEventListener('click', function() {
+  var btn = this, svg = btn.querySelector('svg');
+  svg.style.transition = 'transform 0.6s ease';
+  svg.style.transform = 'rotate(360deg)';
+  setTimeout(function() { svg.style.transition = 'none'; svg.style.transform = ''; }, 700);
+  if (S.skinsCurrentWeek) {
+    delete S.skinsData[S.skinsCurrentWeek];
+    loadSkinsWeek(S.skinsCurrentWeek, true);
+  }
+});
+
+function initSkins() {
+  el('skins-content').innerHTML = '<div class="load-msg">Loading…</div>';
+  var p = S.viewerInit ? Promise.resolve(S.viewerInit) : gasGet('viewerInit');
+  p.then(function(res) {
+    if (!res || !res.ok) { el('skins-content').innerHTML = '<div class="load-error">Failed to load</div>'; return; }
+    S.viewerInit = res; S.skinsInit = res;
+    gasGet('skinsLocks').then(function(lr) { if (lr&&lr.ok) S.skinsLocks = lr.locks||{}; }).catch(function(){});
+    buildSkinsShell(res);
+    var weeks = (res.tabs && res.tabs.weeks) || [];
+    if (weeks.length) loadSkinsWeek(weeks[0].name, false);
+  }).catch(function(err) { el('skins-content').innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function buildSkinsShell(res) {
+  var weeks = (res.tabs && res.tabs.weeks) || [];
+  var html = '<div class="week-selector" id="skins-week-pills">';
+  weeks.forEach(function(w, i) {
+    html += '<div class="week-pill' + (i===0?' active':'') + '" data-week="' + esc(w.name) + '" onclick="loadSkinsWeek(\'' + esc(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
+  });
+  html += '</div><div id="skins-main"></div>';
+  el('skins-content').innerHTML = html;
+}
+
+function loadSkinsWeek(weekName, force) {
+  document.querySelectorAll('#skins-week-pills .week-pill').forEach(function(p) { p.classList.toggle('active', p.dataset.week === weekName); });
+  S.skinsCurrentWeek = weekName;
+  var container = el('skins-main');
+  if (!container) return;
+  if (!force && S.skinsData[weekName]) { renderSkins(S.skinsData[weekName]); return; }
+  container.innerHTML = '<div class="load-msg">Loading ' + esc(weekName) + '…</div>';
+  gasGet('skins', {name: weekName, force: force ? '1' : '0'}).then(function(vm) {
+    if (!vm||!vm.ok) { container.innerHTML = '<div class="load-error">Error: ' + esc(vm&&vm.error||'No data') + '</div>'; return; }
+    S.skinsData[weekName] = vm;
+    renderSkins(vm);
+  }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function skinsHcp(ch) { var c = parseInt(String(ch).replace(/[^0-9]/g,''), 10); return (isFinite(c)&&c>0) ? Math.floor(c*0.70) : 0; }
+
+function buildStrokeArray(sHcp, hcapArr, parArr) {
+  var H = hcapArr.length, result = [], i;
+  for (i = 0; i < H; i++) result.push(0);
+  if (sHcp <= 0) return result;
+  var eligible = [];
+  for (i = 0; i < H; i++) {
+    var p = parseInt(String(parArr[i]),10);
+    if (p===3) continue;
+    var h = parseInt(String(hcapArr[i]).replace(/[^0-9]/g,''), 10);
+    if (!isFinite(h)||h<=0) continue;
+    eligible.push({idx:i, hcp:h});
+  }
+  eligible.sort(function(a,b){return a.hcp-b.hcp;});
+  var rem = sHcp;
+  for (i = 0; i < eligible.length && rem > 0; i++) { result[eligible[i].idx] = 1; rem--; }
+  for (i = 0; i < eligible.length && rem > 0; i++) { result[eligible[i].idx] = 2; rem--; }
+  return result;
+}
+
+function renderSkins(vm) {
+  var container = el('skins-main');
+  if (!container) return;
+  var hcaps = vm.holeHandicaps||[], pars = vm.holePars||[], labels = vm.holeLabels||[];
+  var H = labels.length, M = vm.courseMeta||{};
+
+  var golfers = [];
+  (vm.groups||[]).forEach(function(grp) {
+    (grp.rows||[]).forEach(function(row) {
+      var ch = parseInt(String(row.courseHandicap||'').replace(/[^0-9]/g,''), 10)||0;
+      var sHcp = skinsHcp(ch), stArr = buildStrokeArray(sHcp, hcaps, pars);
+      var rawArr = [], adjArr = [];
+      for (var h = 0; h < H; h++) {
+        var rv = parseInt(row.scores[h], 10);
+        if (!isFinite(rv)||rv<=0) { rawArr.push(null); adjArr.push(null); }
+        else { rawArr.push(rv); adjArr.push(rv - stArr[h]); }
       }
+      golfers.push({name:row.name, ch:ch, sHcp:sHcp, raw:rawArr, adj:adjArr, st:stArr});
     });
   });
+
+  var holeWinner = [], skinCount = golfers.map(function(){return 0;});
+  for (var h = 0; h < H; h++) {
+    var vals = golfers.map(function(g){return g.adj[h];});
+    var valid = vals.filter(function(v){return v!==null&&isFinite(v);});
+    if (!valid.length) { holeWinner.push(null); continue; }
+    var best = Math.min.apply(null, valid);
+    var wi = []; vals.forEach(function(v,i){if(v===best) wi.push(i);});
+    if (wi.length===1) { holeWinner.push(wi[0]); skinCount[wi[0]]++; }
+    else holeWinner.push(-1);
+  }
+
+  var out = '';
+
+  if (vm.locked && vm.lockedInfo) {
+    var by = vm.lockedInfo.lockedBy||'admin', at = vm.lockedInfo.lockedAt ? new Date(vm.lockedInfo.lockedAt).toLocaleString() : '';
+    out += '<div class="lock-banner"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Results locked<span class="lock-meta"> by ' + esc(by) + (at ? ' · ' + esc(at) : '') + '</span></div>';
+  }
+
+  out += '<div class="course-meta skins-meta"><strong>' + esc(vm.courseDisplay||vm.sheetName||'') + '</strong>';
+  if (M.forwardLabel||M.backLabel) out += '<span class="cm-sep">|</span>Tee: <span class="cm-val">' + esc(M.forwardLabel||'') + '</span> / <span class="cm-val">' + esc(M.backLabel||'') + '</span>';
+  if (M.courseRatingForward) out += '<span class="cm-sep">|</span>Rating: <span class="cm-val">' + esc(M.courseRatingForward) + '</span>';
+  if (M.slopeForward) out += '<span class="cm-sep">|</span>Slope: <span class="cm-val">' + esc(M.slopeForward) + '</span>';
+  out += '</div>';
+
+  out += '<div class="key-box"><div class="key-row"><span class="key-lbl">Course Handicap:</span><span>Your full handicap for this week</span></div><div class="key-row"><span class="key-lbl">Skins Handicap:</span><span>Course Handicap &times; 70%, rounded down &nbsp;&middot;&nbsp; no strokes on par 3s</span></div><div class="key-row"><span class="key-lbl">Each cell:</span><span>Gross on top &nbsp;&middot;&nbsp; net below</span></div></div>';
+
+  if (!golfers.length) { out += '<div class="load-msg">No golfer data for ' + esc(vm.sheetName||S.skinsCurrentWeek||'') + '.</div>'; container.innerHTML = out; return; }
+
+  out += '<div class="skins-tbl-wrap"><table class="skins-grid"><colgroup><col class="cGolfer"><col class="cInfo">';
+  for (var h = 0; h < H; h++) out += '<col class="cHole">';
+  out += '<col class="cTotal"></colgroup>';
+
+  out += '<thead><tr class="hRow"><th class="cGolfer hcp-lbl">Hole Handicap</th><th class="cInfo"></th>';
+  for (var h = 0; h < H; h++) out += '<th>' + esc(hcaps[h]||'—') + '</th>';
+  out += '<th></th></tr><tr class="pRow"><th class="cGolfer par-lbl">Par</th><th class="cInfo"></th>';
+  for (var h = 0; h < H; h++) out += '<th>' + esc(pars[h]||'—') + '</th>';
+  out += '<th></th></tr><tr class="lRow"><th class="cGolfer">Golfer</th><th class="cInfo">Course /<br>Skins Hdcp</th>';
+  for (var h = 0; h < H; h++) { var lbl2 = String(labels[h]||('Hole '+(h+1))).trim(); var hNum = lbl2.match(/\d+/); out += '<th>' + (hNum ? 'Hole '+hNum[0] : esc(lbl2)) + '</th>'; }
+  out += '<th>Total</th></tr></thead><tbody>';
+
+  golfers.forEach(function(gl, gi) {
+    var grossTot=0, grossFilled=0, adjTot=0;
+    gl.raw.forEach(function(v,h){if(v!==null){grossTot+=v;grossFilled++;adjTot+=gl.adj[h];}});
+    out += '<tr class="golfer-row"><td class="cGolfer"><div style="font-weight:700;font-size:14px">' + esc(gl.name) + '</div></td>';
+    out += '<td class="cInfo"><div style="font-size:11px;color:var(--text-muted)">Course:</div><div style="font-weight:700;font-size:14px">' + esc(gl.ch) + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Skins:</div><div style="font-weight:700;font-size:14px;color:var(--success)">' + esc(gl.sHcp) + '</div></td>';
+    for (var h = 0; h < H; h++) {
+      var rv=gl.raw[h], av=gl.adj[h], stv=gl.st[h];
+      var isBest=(holeWinner[h]===gi);
+      var isPush=(holeWinner[h]===-1&&av!==null&&isFinite(av)&&av===Math.min.apply(null,golfers.map(function(x){return(x.adj[h]!==null&&isFinite(x.adj[h]))?x.adj[h]:9999;})));
+      var cls=isBest?'winner':isPush?'push':'';
+      var mk=stv>0?('<span class="mk">'+strokeLabel(stv)+'</span>'):'';
+      if(rv===null) out+='<td class="'+cls+'"><span class="sEmpty">—</span>'+mk+'</td>';
+      else out+='<td class="'+cls+'"><div class="score-pair"><div class="sGross">'+esc(rv)+'</div><div class="sNet">'+esc(av)+mk+'</div></div></td>';
+    }
+    out += '<td>';
+    if(grossFilled>0) out+='<div class="score-pair"><div class="sGross">'+esc(grossTot)+'</div><div class="sNet">'+esc(adjTot)+'</div></div>';
+    else out+='<span class="sEmpty">—</span>';
+    out += '</td></tr>';
+  });
+
+  out += '<tr class="tot-row"><td class="cGolfer">Result</td><td></td>';
+  for (var h = 0; h < H; h++) {
+    var w = holeWinner[h];
+    if(w===null) out+='<td>—</td>';
+    else if(w===-1) out+='<td style="font-size:12px;color:var(--gold)">Push</td>';
+    else out+='<td class="winner">'+esc(golfers[w].name.split(' ')[0])+'</td>';
+  }
+  out += '<td></td></tr></tbody></table></div>';
+
+  var totalSkins = skinCount.reduce(function(a,b){return a+b;},0);
+  out += '<div class="skins-summary-section"><div class="skins-summary">';
+  if (totalSkins === 0) {
+    out += '<div style="opacity:.65;font-size:15px;padding:var(--sp2) 0;text-align:center">No skins decided yet — scores may still be in progress.</div>';
+  } else {
+    out += '<div class="sum-header">Skins Won (' + totalSkins + ')</div><div class="skin-wins-grid">';
+    for (var h = 0; h < H; h++) {
+      var w = holeWinner[h]; if (w===null||w===-1) continue;
+      var lbl3 = String(labels[h]||('Hole '+(h+1))).trim(); var hNum2 = lbl3.match(/\d+/);
+      out += '<div class="skin-win-card"><div class="swc-hole">' + (hNum2?'Hole '+hNum2[0]:esc(lbl3)) + '</div><div class="swc-winner">' + esc(golfers[w].name) + '</div><div class="swc-score">Net ' + esc(golfers[w].adj[h]) + '</div></div>';
+    }
+    out += '</div>';
+  }
+  out += '</div></div>';
+
+  out += '<div class="skins-legend"><span><span class="dot dot-win"></span>Skin won</span><span><span class="dot dot-push"></span>Push</span><span><span class="mk-demo">*</span> 1 stroke received</span><span><span class="mk-demo">**</span> 2 strokes received</span></div>';
+
+  container.innerHTML = out;
+}
+
+/* ════════════════════════════════════════════════════════
+   ENTRY PAGE
+   ════════════════════════════════════════════════════════ */
+function initEntry() {
+  gasGet('entryInit').then(function(res) {
+    if (!res || !res.ok) { el('entry-table-wrap').innerHTML = '<div class="load-error">Failed to load entry data</div>'; return; }
+    S.entryInit = res;
+    buildEntryControls(res);
+  }).catch(function(err) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function buildEntryControls(res) {
+  var weeks = res.weeks || [], markers = res.markerNames || [];
+
+  var weekOpts = '';
+  weeks.forEach(function(w) { weekOpts += '<option value="' + esc(w.id) + '">' + esc(w.label) + '</option>'; });
+  el('entry-week-select').innerHTML = weekOpts;
+
+  var markerOpts = '<option value="">-- Select Name --</option>';
+  markers.forEach(function(m) { markerOpts += '<option value="' + esc(m) + '">' + esc(m) + '</option>'; });
+  el('entry-marker-select').innerHTML = markerOpts;
+
+  updateEntryCheckout();
+}
+
+window.loadEntryGroup = function() {
+  var weekName = el('entry-week-select').value;
+  var group = el('entry-group-select').value;
+  if (!weekName || !group) return;
+
+  S.entryLock = null;
+  el('entry-table-wrap').innerHTML = '<div class="load-msg">Loading group…</div>';
+  el('submit-footer').style.display = 'none';
+
+  gasGet('weekGroup', {sheet: weekName, group: group}).then(function(res) {
+    if (!res || !res.ok) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(res&&res.error||'No data') + '</div>'; return; }
+    S.entryGroupData = res;
+    S.entryCurrentWeek = weekName;
+    S.entryCurrentGroup = group;
+    S.entryGolfers = (res.golfers||[]).map(function(g){return g.name;});
+    S.entryLock = res.lock || null;
+
+    // Update group options for this week
+    if (S.entryInit) {
+      var wk = (S.entryInit.weeks||[]).filter(function(w){return w.id===weekName;})[0];
+      if (wk) {
+        var maxG = wk.groups||7, opts = '';
+        for (var g = 1; g <= maxG; g++) opts += '<option value="'+g+'"'+(String(g)===String(group)?' selected':'')+'>'+'Group '+g+'</option>';
+        el('entry-group-select').innerHTML = opts;
+      }
+    }
+
+    renderEntryTable(res);
+  }).catch(function(err) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+};
+
+function renderEntryTable(res) {
+  var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
+  var H = holes.length;
+
+  var chipHtml = '<div class="entry-chips">';
+  var lock = S.entryLock;
+  if (lock && lock.lockedBy) {
+    chipHtml += '<span class="status-chip chip-warn"><span class="chip-dot"></span>Locked by ' + esc(lock.lockedBy) + '</span>';
+  } else {
+    chipHtml += '<span class="status-chip chip-ok"><span class="chip-dot"></span>Available</span>';
+  }
+  chipHtml += '<span class="status-chip chip-info">Course: ' + esc(res.courseDisplay||'') + '</span>';
+  chipHtml += '</div>';
+  el('entry-chips-area').innerHTML = chipHtml;
+
+  var html = '<div class="entry-outer"><table class="entry-tbl"><thead><tr>';
+  html += '<th class="entry-col-name">Golfer</th>';
+  for (var h = 0; h < H; h++) { var lbl = String(holes[h]||(h+1)).trim(); var hNum = lbl.match(/\d+/); html += '<th class="entry-col-hole">' + (hNum?hNum[0]:esc(lbl)) + '</th>'; }
+  html += '<th class="entry-col-tot">Tot</th></tr></thead><tbody>';
+
+  html += '<tr class="e-hcp-row"><td class="entry-col-name">Hole Hcp</td>';
+  for (var h = 0; h < H; h++) html += '<td class="entry-col-hole">' + esc(hcaps[h]||'') + '</td>';
+  html += '<td class="entry-col-tot"></td></tr>';
+
+  html += '<tr class="e-par-row"><td class="entry-col-name">Par</td>';
+  for (var h = 0; h < H; h++) html += '<td class="entry-col-hole">' + esc(pars[h]||'') + '</td>';
+  html += '<td class="entry-col-tot">' + esc(sumNums(pars)) + '</td></tr>';
+
+  for (var i = 0; i < golfers.length; i++) {
+    var g = golfers[i];
+    var gScores = scores[i] || [];
+    var isAbsent = String(g.absent||'').toLowerCase().includes('yes');
+    var initTot = 0;
+    for (var h = 0; h < H; h++) { if (!isAbsent) { var sv = parseInt(String(gScores[h]||''), 10); if (isFinite(sv)&&sv>0) initTot += sv; } }
+
+    html += '<tr class="e-player-row">';
+    html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + esc(g.name||'—') + '</span>';
+    html += '<div class="absent-toggle-wrap"><span class="absent-toggle-label">Abs</span>';
+    html += '<label><input type="checkbox" class="toggle-input" id="abs-'+i+'" '+(isAbsent?'checked ':'')+' onchange="toggleAbsentRow('+i+',this.checked)"><span class="toggle-track"></span></label>';
+    html += '</div></div></td>';
+    for (var h = 0; h < H; h++) {
+      var existing = gScores[h] || '';
+      var numVal = parseInt(String(existing), 10);
+      var valStr = (!isAbsent && isFinite(numVal) && numVal > 0) ? String(numVal) : '';
+      html += '<td class="entry-col-hole"><input type="number" min="1" max="12" class="score-inp'+(isAbsent?' absent':'') + '"';
+      html += ' value="'+valStr+'" id="inp-'+i+'-h'+h+'"';
+      html += (isAbsent ? ' readonly' : '');
+      html += ' oninput="calcEntryTotal('+i+')"></td>';
+    }
+    html += '<td class="entry-col-tot"><div class="e-tot-cell'+(isAbsent?' e-tot-absent':'')+'" id="tot-'+i+'">'+(initTot>0?initTot:'—')+'</div></td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
+  el('entry-table-wrap').innerHTML = html;
+
+  var weekLabel = (S.entryCurrentWeek||'').replace('WEEK ','Week ');
+  el('submit-footer-label').textContent = 'Group ' + S.entryCurrentGroup + ' — ' + weekLabel;
+  el('submit-footer').style.display = '';
+  updateEntryCheckout();
+}
+
+window.calcEntryTotal = function(i) {
+  var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
+  var sum = 0;
+  for (var h = 0; h < H; h++) {
+    var inp = el('inp-'+i+'-h'+h);
+    if (!inp || inp.classList.contains('absent')) continue;
+    var v = parseInt(inp.value, 10);
+    if (isFinite(v)) sum += v;
+  }
+  var totEl = el('tot-'+i);
+  if (totEl) totEl.textContent = sum > 0 ? sum : '—';
+};
+
+window.toggleAbsentRow = function(i, absent) {
+  var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
+  for (var h = 0; h < H; h++) {
+    var inp = el('inp-'+i+'-h'+h);
+    if (!inp) continue;
+    if (absent) { inp.classList.add('absent'); inp.setAttribute('readonly',''); }
+    else { inp.classList.remove('absent'); inp.removeAttribute('readonly'); }
+  }
+  var totEl = el('tot-'+i);
+  if (totEl) { totEl.classList.toggle('e-tot-absent', absent); if (absent) totEl.textContent = '—'; }
+  if (!absent) window.calcEntryTotal(i);
+};
+
+window.onMarkerChange = function() {
+  S.entryMarkerName = el('entry-marker-select').value;
+  updateEntryCheckout();
+};
+
+function updateEntryCheckout() {
+  var name = el('entry-marker-select') ? el('entry-marker-select').value : '';
+  S.entryMarkerName = name;
+  var btn = el('checkout-btn');
+  if (!btn) return;
+  var lock = S.entryLock;
+  if (!name) {
+    btn.textContent = 'Check Out'; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
+  } else if (lock && lock.lockedBy === name) {
+    btn.textContent = '✓ Checked Out'; btn.disabled = false; btn.style.opacity = '1'; btn.style.background = 'var(--accent)';
+  } else if (lock && lock.lockedBy) {
+    btn.textContent = 'Locked by ' + lock.lockedBy; btn.disabled = true; btn.style.opacity = '0.5'; btn.style.background = '';
+  } else {
+    btn.textContent = 'Check Out'; btn.disabled = !S.entryGroupData; btn.style.opacity = S.entryGroupData ? '1' : '0.5'; btn.style.background = '';
+  }
+}
+
+window.checkoutEntry = function() {
+  var name = S.entryMarkerName;
+  if (!name || !S.entryCurrentWeek || !S.entryCurrentGroup) return;
+  var btn = el('checkout-btn');
+  btn.textContent = 'Checking out…'; btn.disabled = true;
+  gasGet('acquireLock', {sheet: S.entryCurrentWeek, group: S.entryCurrentGroup, marker: name}).then(function(res) {
+    if (!res || !res.ok) {
+      btn.disabled = false;
+      alert('Could not check out: ' + (res&&res.error||'Unknown error'));
+      updateEntryCheckout();
+      return;
+    }
+    S.entryLock = res.lock;
+    updateEntryCheckout();
+    el('entry-chips-area').innerHTML = '<div class="entry-chips"><span class="status-chip chip-ok"><span class="chip-dot"></span>Checked out as ' + esc(name) + '</span></div>';
+  }).catch(function(err) { btn.disabled = false; updateEntryCheckout(); alert('Error: ' + String(err)); });
+};
+
+window.submitScores = function() {
+  if (!S.entryCurrentWeek || !S.entryCurrentGroup || !S.entryGolfers) { alert('Please load a group first.'); return; }
+  if (!S.entryMarkerName) { alert('Please check out first (select your name and tap Check Out).'); return; }
+
+  var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
+  var golfers = S.entryGroupData ? (S.entryGroupData.golfers||[]) : [];
+  var scores = [], absentFlags = [], allReady = true;
+
+  for (var i = 0; i < golfers.length; i++) {
+    var absent = el('abs-'+i) ? el('abs-'+i).checked : false;
+    absentFlags.push(absent);
+    var row = [];
+    for (var h = 0; h < H; h++) {
+      var inp = el('inp-'+i+'-h'+h);
+      var v = inp ? parseInt(inp.value, 10) : 0;
+      if (!absent && (!isFinite(v) || v < 1 || v > 12)) allReady = false;
+      row.push(absent ? 1 : (isFinite(v) && v > 0 ? v : 1));
+    }
+    scores.push(row);
+  }
+
+  if (!allReady) { alert('Some scores are missing or out of range (1-12). Please fill in all scores.'); return; }
+
+  var payload = {
+    sheetName: S.entryCurrentWeek,
+    group: parseInt(S.entryCurrentGroup, 10),
+    markerName: S.entryMarkerName,
+    golfers: S.entryGolfers,
+    scores: scores,
+    absentFlags: absentFlags,
+    overwrite: false
+  };
+
+  var btn = el('btn-submit-scores');
+  btn.textContent = 'Submitting…'; btn.disabled = true;
+
+  gasGet('submit', {payload: JSON.stringify(payload)}).then(function(res) {
+    if (res && res.ok) {
+      btn.textContent = 'Submitted! ✓'; btn.style.background = '#0d6532';
+      S.entryLock = null;
+      delete S.viewerWeekData[S.entryCurrentWeek];
+      delete S.skinsData[S.entryCurrentWeek];
+      setTimeout(function() { btn.textContent = 'Submit Scorecard'; btn.style.background = ''; btn.disabled = false; }, 3000);
+    } else {
+      btn.textContent = 'Submit Scorecard'; btn.disabled = false;
+      alert('Error: ' + (res&&res.error||'Unknown error'));
+    }
+  }).catch(function(err) { btn.textContent = 'Submit Scorecard'; btn.disabled = false; alert('Error: ' + String(err)); });
+};
 
 })();
 </script>

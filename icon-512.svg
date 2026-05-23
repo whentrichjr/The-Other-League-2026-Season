@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="108" fill="#050914"/>
+  <rect width="512" height="512" rx="108" fill="#0f7a3a" opacity="0.18"/>
+  <!-- Golf flag pin -->
+  <line x1="232" y1="100" x2="232" y2="390" stroke="#e8eefc" stroke-width="12" stroke-linecap="round"/>
+  <!-- Flag -->
+  <polygon points="232,100 348,148 232,196" fill="#f6c343"/>
+  <!-- Ball -->
+  <circle cx="232" cy="394" r="28" fill="#e8eefc"/>
+  <!-- TOL wordmark -->
+  <text x="256" y="468" font-family="system-ui,Arial,sans-serif" font-size="52" font-weight="900"
+        fill="#7dffa7" text-anchor="middle" letter-spacing="8">TOL</text>
+</svg>

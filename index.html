@@ -637,10 +637,6 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
       </div>
     </div>
 
-    <div class="home-status-bar">
-      <div class="home-status-dot"></div>
-      <span class="home-status-text" id="home-status-text">Loading…</span>
-    </div>
   </div>
 </div>
 
@@ -871,14 +867,7 @@ gasGet('seasonInfo').then(function(res) {
 gasGet('viewerInit').then(function(res) {
   if (!res || !res.ok) return;
   S.viewerInit = res;
-  var weeks = (res.tabs && res.tabs.weeks) || [];
-  var txt = weeks.length
-    ? 'Week ' + weeks.length + ' of ' + (res.tabs.weeks.length > 12 ? res.tabs.weeks.length : 12) + ' active'
-    : 'Season in progress';
-  el('home-status-text').textContent = txt;
-}).catch(function() {
-  el('home-status-text').textContent = 'Season in progress';
-});
+}).catch(function() {});
 
 /* ── SLIDESHOW ───────────────────────────────────────── */
 var SLIDE_MS = 8000;
@@ -1602,6 +1591,12 @@ window.submitScores = function() {
     }
   }).catch(function(err) { btn.textContent = 'Submit Scorecard'; btn.disabled = false; alert('Error: ' + String(err)); });
 };
+
+window.switchPage = switchPage;
+window.setViewerMode = setViewerMode;
+window.loadViewerWeek = loadViewerWeek;
+window.loadLeaguePage = loadLeaguePage;
+window.loadSkinsWeek = loadSkinsWeek;
 
 })();
 </script>

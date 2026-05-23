@@ -321,7 +321,7 @@ html, body {
 
 .scorecard-tbl {
   border-collapse: separate; border-spacing: 0;
-  width: 100%; min-width: 640px; font-size: 12px;
+  width: 100%; min-width: 500px; font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .scorecard-tbl th, .scorecard-tbl td {
@@ -331,9 +331,9 @@ html, body {
 }
 .scorecard-tbl th:last-child, .scorecard-tbl td:last-child { border-right: none; }
 
-.col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 110px; max-width: 110px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 8px; }
-.col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 56px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
-.col-hole { min-width: 44px; text-align: center; padding: 4px 2px; }
+.col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 90px; max-width: 90px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); padding: 0 6px; }
+.col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 48px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.col-hole { min-width: 34px; text-align: center; padding: 4px 2px; }
 
 .tbl-header-row th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; }
 .tbl-header-row th.col-name { background: var(--card2); text-align: left; }
@@ -439,13 +439,13 @@ html, body {
 .entry-outer::-webkit-scrollbar-track { background: transparent; }
 .entry-outer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-.entry-tbl { border-collapse: separate; border-spacing: 0; min-width: 660px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.entry-tbl { border-collapse: separate; border-spacing: 0; min-width: 520px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .entry-tbl th, .entry-tbl td { border-bottom: 1px solid rgba(30,45,74,0.6); border-right: 1px solid rgba(30,45,74,0.4); padding: 0; vertical-align: middle; }
 .entry-tbl th:last-child, .entry-tbl td:last-child { border-right: none; }
 
-.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 120px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
-.entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 52px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
-.entry-col-hole { min-width: 46px; text-align: center; }
+.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 100px; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 44px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-hole { min-width: 36px; text-align: center; }
 
 .entry-tbl thead th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 0 6px; text-align: center; }
 .entry-tbl thead th.entry-col-name { text-align: left; }
@@ -453,7 +453,7 @@ html, body {
 .entry-tbl .e-par-row td { color: var(--text-muted); }
 .entry-tbl .e-hcp-row td.entry-col-name, .entry-tbl .e-par-row td.entry-col-name { text-align: left; padding-left: 8px; background: var(--card); font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
 .entry-tbl .e-hcp-row td.entry-col-tot, .entry-tbl .e-par-row td.entry-col-tot { background: var(--card); }
-.entry-tbl .e-player-row td { background: var(--card); height: 60px; }
+.entry-tbl .e-player-row td { background: var(--card); height: 48px; }
 
 .entry-name-cell { display: flex; flex-direction: column; gap: 6px; padding: 8px; height: 100%; justify-content: center; }
 .entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -466,8 +466,8 @@ html, body {
 .toggle-input:checked + .toggle-track::before { transform: translateX(14px); }
 
 .score-inp {
-  width: 40px; height: 42px; background: var(--card2); border: 1px solid var(--border2);
-  border-radius: 8px; color: var(--text); text-align: center; font-size: 18px;
+  width: 32px; height: 36px; background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 6px; color: var(--text); text-align: center; font-size: 15px;
   font-weight: 700; font-variant-numeric: tabular-nums; font-family: 'Inter', sans-serif;
   display: block; margin: 0 auto; transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -537,17 +537,17 @@ html, body {
 .key-lbl { font-weight: 700; color: #9ad1ff; min-width: 140px; flex-shrink: 0; }
 
 .skins-tbl-wrap { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin: 0 var(--sp2) var(--sp2); }
-table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; min-width: 820px; }
+table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 660px; }
 .skins-grid th, .skins-grid td { border-bottom: 1px solid var(--border); padding: 0; text-align: center; color: var(--text); vertical-align: middle; }
-.skins-grid col.cGolfer { width: 170px; } .skins-grid col.cInfo { width: 90px; }
-.skins-grid col.cHole { width: 54px; } .skins-grid col.cTotal { width: 60px; }
+.skins-grid col.cGolfer { width: 130px; } .skins-grid col.cInfo { width: 80px; }
+.skins-grid col.cHole { width: 42px; } .skins-grid col.cTotal { width: 52px; }
 .skins-grid thead tr.hRow th { background: #132140; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
 .skins-grid thead tr.pRow th { background: #0f1830; font-size: 12px; padding: 6px 5px; font-weight: 700; color: #9ad1ff; }
 .skins-grid thead tr.lRow th { background: #17295a; font-size: 13px; padding: 8px 5px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
 .hcp-lbl, .par-lbl { text-align: right !important; padding-right: 8px !important; white-space: nowrap !important; }
 .skins-grid th.cGolfer, .skins-grid td.cGolfer { text-align: left; padding-left: 10px; }
 .skins-grid td.cInfo { font-size: 12px; color: #9ad1ff; padding: 4px 6px; }
-.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px 2px; min-height: 48px; }
+.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px 2px; min-height: 38px; }
 .sGross { font-size: 14px; font-weight: 700; line-height: 1.3; }
 .sNet { font-size: 13px; line-height: 1.4; color: var(--success); font-weight: 900; }
 .mk { color: var(--gold); font-size: 10px; vertical-align: super; line-height: 0; font-weight: 900; margin-left: 1px; }
@@ -605,7 +605,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
     <div class="home-nav-list">
       <div class="home-nav-item" onclick="switchPage('viewer')">
         <div class="home-nav-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         </div>
         <div class="home-nav-text">
           <span class="home-nav-label">League Viewer</span>
@@ -739,7 +739,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
   </button>
   <button class="tab" data-page="viewer">
     <div class="tab-inner">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span class="tab-label">Viewer</span>
     </div>
   </button>
@@ -953,14 +953,19 @@ function buildViewerShell(res) {
   weeks.forEach(function(w, i) {
     html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
   });
-  playoffs.forEach(function(w) {
-    html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('Playoff Week ','PO')) + '</div>';
+  var playoffWeeks = playoffs.filter(function(w) { return /^Playoff Week /i.test(w.name); });
+  var playoffInfo  = playoffs.filter(function(w) { return !/^Playoff Week /i.test(w.name); });
+  playoffWeeks.forEach(function(w) {
+    html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace(/Playoff Week /i,'PO')) + '</div>';
   });
   html += '</div>';
 
   html += '<div class="week-selector" id="viewer-league-pills" style="display:none">';
   leagues.forEach(function(s, i) {
     html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + jsStr(s.name) + '\')">' + esc(s.name.replace('League ','')) + '</div>';
+  });
+  playoffInfo.forEach(function(s) {
+    html += '<div class="week-pill" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + jsStr(s.name) + '\')">' + esc(s.name) + '</div>';
   });
   html += '</div>';
 

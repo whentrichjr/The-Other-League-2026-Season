@@ -378,6 +378,37 @@ html, body {
 
 /* Team summary below scorecard */
 .team-summary-row { display: flex; gap: 10px; padding: 10px 8px 4px; flex-wrap: wrap; }
+
+/* ── ADMIN PANEL ── */
+.admin-panel {
+  display: none; margin: 6px 12px 0;
+  background: rgba(154,209,255,0.05); border: 1px solid rgba(154,209,255,0.18);
+  border-radius: var(--r); padding: 10px 14px;
+}
+.admin-panel.show { display: block; }
+.admin-panel-label { font-size: 10px; font-weight: 700; color: #9ad1ff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.admin-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.admin-btn {
+  padding: 6px 12px; border-radius: var(--r);
+  border: 1px solid var(--border2); background: transparent; color: var(--text-muted);
+  font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
+  transition: background .15s; -webkit-tap-highlight-color: transparent;
+}
+.admin-btn:hover { background: rgba(255,255,255,0.04); }
+.admin-btn.a-refresh { border-color: #9ad1ff; color: #9ad1ff; }
+.admin-btn.a-print   { border-color: var(--gold); color: var(--gold); }
+.admin-btn.a-lock    { border-color: var(--success); color: var(--success); }
+.admin-btn.a-unlock  { border-color: var(--error); color: var(--error); }
+.admin-btn.a-reset   { border-color: var(--error); color: var(--error); }
+.admin-lock-row { display: none; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.admin-lock-row.show { display: flex; }
+.admin-lock-input {
+  flex: 1; min-width: 120px; max-width: 200px; padding: 6px 10px;
+  background: var(--card2); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif;
+}
+.admin-lock-input:focus { outline: none; border-color: var(--accent); }
+.admin-status { font-size: 11px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
 .team-chip { display: flex; align-items: center; gap: 10px; background: rgba(15,122,58,0.10); border: 1px solid rgba(15,122,58,0.28); border-radius: var(--r); padding: 8px 14px; }
 .team-chip-label { font-size: 13px; font-weight: 900; color: #9ad1ff; letter-spacing: 0.3px; }
 .team-chip-divider { width: 1px; height: 18px; background: var(--border); }
@@ -710,9 +741,16 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
      ═══════════════════════════════════ -->
 <div id="page-viewer" class="page">
   <div class="page-header">
-    <span class="page-header-title">League Viewer</span>
+    <span class="page-header-title" id="viewer-title">League Viewer</span>
     <div class="icon-btn" id="viewer-refresh-btn" title="Refresh">
       <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.97"/></svg>
+    </div>
+  </div>
+  <div class="admin-panel" id="viewer-admin-panel">
+    <div class="admin-panel-label">⚙ Admin Controls</div>
+    <div class="admin-btns">
+      <button class="admin-btn a-refresh" onclick="adminViewerRefresh()">↺ Force Refresh</button>
+      <button class="admin-btn a-print" onclick="window.print()">🖨 Print / PDF</button>
     </div>
   </div>
   <div class="viewer-content" id="viewer-content">
@@ -770,10 +808,25 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
      ═══════════════════════════════════ -->
 <div id="page-skins" class="page">
   <div class="page-header">
-    <span class="page-header-title">Skins</span>
+    <span class="page-header-title" id="skins-title">Skins</span>
     <div class="icon-btn" id="skins-refresh-btn" title="Refresh">
       <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.97"/></svg>
     </div>
+  </div>
+  <div class="admin-panel" id="skins-admin-panel">
+    <div class="admin-panel-label">⚙ Admin Controls</div>
+    <div class="admin-btns">
+      <button class="admin-btn a-refresh" onclick="adminSkinsRefresh()">↺ Force Refresh</button>
+      <button class="admin-btn a-lock" id="skins-lock-btn" onclick="adminSkinsLock()">🔒 Lock Results</button>
+      <button class="admin-btn a-reset" onclick="adminSkinsReset()">✕ Reset Week</button>
+      <button class="admin-btn a-print" onclick="window.print()">🖨 Print / PDF</button>
+    </div>
+    <div class="admin-lock-row" id="skins-lock-name-row">
+      <input type="text" class="admin-lock-input" id="skins-lock-name-input" placeholder="Your name to lock…">
+      <button class="admin-btn a-lock" onclick="adminSkinsConfirmLock()">✓ Confirm Lock</button>
+      <button class="admin-btn" onclick="adminSkinsCancelLock()">✕ Cancel</button>
+    </div>
+    <div class="admin-status" id="skins-admin-status"></div>
   </div>
   <div id="skins-content">
     <div class="load-msg">Loading…</div>
@@ -819,7 +872,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '7';
+var APP_VERSION = '8';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1367,6 +1420,7 @@ function loadSkinsWeek(weekName, force) {
   gasGet('skins', {name: weekName, force: force ? '1' : '0'}).then(function(vm) {
     if (!vm||!vm.ok) { container.innerHTML = '<div class="load-error">Error: ' + esc(vm&&vm.error||'No data') + '</div>'; return; }
     S.skinsData[weekName] = vm;
+    updateSkinsLockBtn(!!vm.locked);
     renderSkins(vm);
   }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
 }
@@ -1891,6 +1945,128 @@ window.setViewerMode = setViewerMode;
 window.loadViewerWeek = loadViewerWeek;
 window.loadLeaguePage = loadLeaguePage;
 window.loadSkinsWeek = loadSkinsWeek;
+
+/* ════════════════════════════════════════════════════════
+   ADMIN PANEL
+   ════════════════════════════════════════════════════════ */
+
+/* Triple-tap a title element to toggle its admin panel */
+function attachTripleTap(titleId, panelId) {
+  var titleEl = el(titleId);
+  if (!titleEl) return;
+  var taps = 0, timer = null;
+  titleEl.addEventListener('click', function() {
+    taps++;
+    clearTimeout(timer);
+    timer = setTimeout(function() { taps = 0; }, 600);
+    if (taps >= 3) {
+      taps = 0;
+      var panel = el(panelId);
+      if (panel) panel.classList.toggle('show');
+    }
+  });
+}
+attachTripleTap('viewer-title', 'viewer-admin-panel');
+attachTripleTap('skins-title',  'skins-admin-panel');
+
+/* ── Viewer admin ── */
+window.adminViewerRefresh = function() {
+  var weekName = S.viewerCurrentWeek;
+  if (!weekName) { alert('Load a week first.'); return; }
+  delete S.viewerWeekData[weekName];
+  loadViewerWeek(weekName, true);
+};
+
+/* ── Skins admin ── */
+function skinsAdminStatus(msg) {
+  var s = el('skins-admin-status');
+  if (s) s.textContent = msg;
+}
+
+function updateSkinsLockBtn(locked) {
+  var btn = el('skins-lock-btn');
+  if (!btn) return;
+  if (locked) {
+    btn.textContent = '🔓 Unlock Results'; btn.className = 'admin-btn a-unlock';
+  } else {
+    btn.textContent = '🔒 Lock Results';   btn.className = 'admin-btn a-lock';
+  }
+}
+
+window.adminSkinsRefresh = function() {
+  var weekName = S.skinsCurrentWeek;
+  if (!weekName) { alert('Load a week first.'); return; }
+  delete S.skinsData[weekName];
+  loadSkinsWeek(weekName, true);
+};
+
+window.adminSkinsLock = function() {
+  var weekName = S.skinsCurrentWeek;
+  if (!weekName) { alert('Load a week first.'); return; }
+  var vm = S.skinsData[weekName];
+  var isLocked = vm && vm.locked;
+  if (isLocked) {
+    // Unlock
+    skinsAdminStatus('Unlocking…');
+    gasGet('skinsUnlock', {name: weekName}).then(function(res) {
+      if (res && res.ok) {
+        delete S.skinsData[weekName];
+        loadSkinsWeek(weekName, true);
+        updateSkinsLockBtn(false);
+        skinsAdminStatus('Unlocked ✓');
+      } else {
+        skinsAdminStatus('Error: ' + (res && res.error || 'Unknown'));
+      }
+    }).catch(function(err) { skinsAdminStatus('Error: ' + String(err)); });
+  } else {
+    // Show name input
+    var row = el('skins-lock-name-row');
+    if (row) { row.classList.add('show'); }
+    var inp = el('skins-lock-name-input');
+    if (inp) { inp.value = S.entryMarkerName || ''; inp.focus(); }
+  }
+};
+
+window.adminSkinsConfirmLock = function() {
+  var name = (el('skins-lock-name-input') ? el('skins-lock-name-input').value : '').trim();
+  if (!name) { skinsAdminStatus('Enter your name first.'); return; }
+  var row = el('skins-lock-name-row');
+  if (row) row.classList.remove('show');
+  var weekName = S.skinsCurrentWeek;
+  skinsAdminStatus('Locking…');
+  gasGet('skinsLock', {name: weekName, marker: name}).then(function(res) {
+    if (res && res.ok) {
+      if (S.skinsData[weekName]) S.skinsData[weekName].locked = true;
+      updateSkinsLockBtn(true);
+      skinsAdminStatus('Locked ✓');
+    } else {
+      skinsAdminStatus('Error: ' + (res && res.error || 'Unknown'));
+    }
+  }).catch(function(err) { skinsAdminStatus('Error: ' + String(err)); });
+};
+
+window.adminSkinsCancelLock = function() {
+  var row = el('skins-lock-name-row');
+  if (row) row.classList.remove('show');
+  skinsAdminStatus('');
+};
+
+window.adminSkinsReset = function() {
+  var weekName = S.skinsCurrentWeek;
+  if (!weekName) { alert('Load a week first.'); return; }
+  if (!confirm('Reset skins for ' + weekName + '? This clears the lock and cached results.')) return;
+  skinsAdminStatus('Resetting…');
+  gasGet('skinsReset', {name: weekName}).then(function(res) {
+    if (res && res.ok) {
+      delete S.skinsData[weekName];
+      loadSkinsWeek(weekName, true);
+      updateSkinsLockBtn(false);
+      skinsAdminStatus('Reset ✓');
+    } else {
+      skinsAdminStatus('Error: ' + (res && res.error || 'Unknown'));
+    }
+  }).catch(function(err) { skinsAdminStatus('Error: ' + String(err)); });
+};
 
 })();
 </script>

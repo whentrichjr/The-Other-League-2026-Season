@@ -304,7 +304,7 @@ html, body {
 }
 .group-toggle:hover { background: var(--card3); }
 .group-name { font-size: 14px; font-weight: 700; color: var(--text); }
-.group-members { font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-members { font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; line-height: 1.5; }
 .group-chevron { flex-shrink: 0; transition: transform 0.2s; }
 .group-chevron svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .group-accordion.open .group-chevron { transform: rotate(90deg); }
@@ -350,7 +350,7 @@ html, body {
 .tbl-player-row:hover td { background: var(--card3); }
 
 .player-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 4px 4px; overflow: hidden; }
-.player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; }
 .player-meta { font-size: 10px; color: var(--text-dim); line-height: 1.2; margin-top: 1px; }
 
 .badge { display: inline-flex; align-items: center; padding: 1px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
@@ -453,10 +453,10 @@ html, body {
 .entry-tbl .e-par-row td { color: var(--text-muted); }
 .entry-tbl .e-hcp-row td.entry-col-name, .entry-tbl .e-par-row td.entry-col-name { text-align: left; padding-left: 8px; background: var(--card); font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
 .entry-tbl .e-hcp-row td.entry-col-tot, .entry-tbl .e-par-row td.entry-col-tot { background: var(--card); }
-.entry-tbl .e-player-row td { background: var(--card); height: 40px; }
+.entry-tbl .e-player-row td { background: var(--card); height: 72px; }
 
 .entry-name-cell { display: flex; flex-direction: column; gap: 3px; padding: 4px 5px; height: 100%; justify-content: center; overflow: hidden; }
-.entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; }
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
 .toggle-input { display: none; }
@@ -473,6 +473,9 @@ html, body {
 }
 .score-inp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(15,122,58,0.2); outline: none; }
 .score-inp.absent { background: var(--absent-bg); border-color: var(--gold-border); color: var(--absent-color); }
+
+.entry-hole-wrap { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 3px 0; height: 100%; }
+.e-stroke-mark { font-size: 9px; font-weight: 900; color: var(--gold); line-height: 1; min-height: 11px; text-align: center; }
 
 .e-tot-cell { text-align: center; padding: 4px; font-size: 14px; font-weight: 900; color: var(--text); }
 .e-tot-absent { color: var(--absent-color); }
@@ -537,19 +540,19 @@ html, body {
 .key-lbl { font-weight: 700; color: #9ad1ff; min-width: 140px; flex-shrink: 0; }
 
 .skins-tbl-wrap { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin: 0 var(--sp2) var(--sp2); }
-table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; min-width: 365px; }
+table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 460px; }
 .skins-grid th, .skins-grid td { border-bottom: 1px solid var(--border); padding: 0; text-align: center; color: var(--text); vertical-align: middle; }
-.skins-grid col.cGolfer { width: 78px; } .skins-grid col.cInfo { width: 58px; }
-.skins-grid col.cHole { width: 22px; } .skins-grid col.cTotal { width: 34px; }
+.skins-grid col.cGolfer { width: 90px; } .skins-grid col.cInfo { width: 60px; }
+.skins-grid col.cHole { width: 30px; } .skins-grid col.cTotal { width: 40px; }
 .skins-grid thead tr.hRow th { background: #132140; font-size: 10px; padding: 4px 2px; font-weight: 700; color: #9ad1ff; }
 .skins-grid thead tr.pRow th { background: #0f1830; font-size: 10px; padding: 4px 2px; font-weight: 700; color: #9ad1ff; }
 .skins-grid thead tr.lRow th { background: #17295a; font-size: 11px; padding: 5px 2px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
 .hcp-lbl, .par-lbl { text-align: right !important; padding-right: 6px !important; white-space: nowrap !important; overflow: hidden; max-width: 68px; }
 .skins-grid th.cGolfer, .skins-grid td.cGolfer { text-align: left; padding-left: 5px; overflow: hidden; }
 .skins-grid td.cInfo { font-size: 10px; color: #9ad1ff; padding: 2px 3px; }
-.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px 1px; min-height: 32px; }
-.sGross { font-size: 11px; font-weight: 700; line-height: 1.3; }
-.sNet { font-size: 10px; line-height: 1.4; color: var(--success); font-weight: 900; }
+.score-pair { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px 1px; min-height: 40px; }
+.sGross { font-size: 12px; font-weight: 700; line-height: 1.3; }
+.sNet { font-size: 11px; line-height: 1.4; color: var(--success); font-weight: 900; }
 .mk { color: var(--gold); font-size: 8px; vertical-align: super; line-height: 0; font-weight: 900; margin-left: 1px; }
 .sNet .mk { color: var(--gold); }
 .sEmpty { opacity: .3; font-size: 11px; }
@@ -838,6 +841,12 @@ function sumNums(arr) {
 }
 function strokeLabel(n) { return n >= 2 ? '**' : n === 1 ? '*' : ''; }
 function jsStr(s) { return String(s == null ? '' : s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+function splitNameHtml(n) {
+  n = (n == null) ? '' : String(n).trim();
+  var sp = n.lastIndexOf(' ');
+  if (sp < 1) return esc(n);
+  return esc(n.slice(0, sp)) + '<br>' + esc(n.slice(sp + 1));
+}
 
 /* ── API ─────────────────────────────────────────────── */
 function gasGet(action, params) {
@@ -989,7 +998,7 @@ function buildViewerShell(res) {
   if (leagues.length) {
     html += '<div class="viewer-mode-row">';
     html += '<button class="v-mode-btn active" id="v-mode-week" onclick="setViewerMode(\'week\')">Scorecards</button>';
-    html += '<button class="v-mode-btn" id="v-mode-league" onclick="setViewerMode(\'league\')">League Sheets</button>';
+    html += '<button class="v-mode-btn" id="v-mode-league" onclick="setViewerMode(\'league\')">League Information</button>';
     html += '</div>';
   }
 
@@ -1103,17 +1112,26 @@ function renderViewerWeek(vm) {
   var metaHtml = '<div class="course-meta">';
   metaHtml += '<span class="meta-badge">' + esc(vm.courseDisplay || vm.sheetName || '') + '</span>';
   if (M.forwardLabel || M.backLabel) metaHtml += '<span class="meta-badge">Tee: ' + esc(M.forwardLabel||'') + ' / ' + esc(M.backLabel||'') + '</span>';
-  if (M.courseRatingForward) metaHtml += '<span class="meta-badge">Rating: ' + esc(M.courseRatingForward) + '</span>';
-  if (M.slopeForward) metaHtml += '<span class="meta-badge">Slope: ' + esc(M.slopeForward) + '</span>';
+  if (M.courseRatingForward || M.slopeForward) {
+    var rsParts = [];
+    if (M.courseRatingForward) rsParts.push('Rating: ' + esc(M.courseRatingForward));
+    if (M.slopeForward) rsParts.push('Slope: ' + esc(M.slopeForward));
+    metaHtml += '<span class="meta-badge">' + rsParts.join(' / ') + '</span>';
+  }
   metaHtml += '</div>';
 
   var groupsHtml = '';
   groups.forEach(function(G, gi) {
-    var names = (G.rows||[]).map(function(r) { return r.name; }).filter(Boolean).join(' · ');
+    var rows0 = G.rows || [], pairLines = [], pi0;
+    for (pi0 = 0; pi0 < rows0.length; pi0 += 2) {
+      var pairNames = rows0.slice(pi0, pi0 + 2).map(function(r) { return r.name || ''; }).filter(Boolean);
+      if (pairNames.length) pairLines.push(pairNames.map(esc).join(' * '));
+    }
+    var namesHtml = pairLines.join('<br>');
     groupsHtml += '<div class="group-accordion' + (gi === 0 ? ' open' : '') + '">';
     groupsHtml += '<div class="group-toggle" onclick="toggleAccordion(this)">';
     groupsHtml += '<span class="group-name">Group ' + esc(G.group) + '</span>';
-    groupsHtml += '<span class="group-members">' + esc(names) + '</span>';
+    groupsHtml += '<span class="group-members">' + namesHtml + '</span>';
     groupsHtml += '<span class="group-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>';
     groupsHtml += '</div><div class="group-body"><div class="scorecard-outer">';
     groupsHtml += renderScorecardTable(G, holes, hcaps, pars);
@@ -1159,7 +1177,7 @@ function renderScorecardTable(G, holes, hcaps, pars) {
     var isAbsRow = r.absent && grossFilled === 0;
 
     html += '<tr class="tbl-player-row' + (isAbsRow ? ' absent-row' : '') + '">';
-    html += '<td class="col-name"><div class="player-name-cell"><span class="player-name">' + esc(r.name) + '</span>';
+    html += '<td class="col-name"><div class="player-name-cell"><span class="player-name">' + splitNameHtml(r.name) + '</span>';
     var metaParts = [];
     if (r.courseHandicap) metaParts.push('CH' + esc(r.courseHandicap));
     if (r.flight) metaParts.push('<span class="badge badge-' + esc((r.flight||'').toLowerCase()) + '">' + esc(r.flight) + '</span>');
@@ -1195,7 +1213,7 @@ function renderScorecardTable(G, holes, hcaps, pars) {
   if (ptH.length || ptT.length) {
     html += '<tr class="tbl-section-row"><td colspan="' + colSpan + '">Points</td></tr>';
     for (var i = 0; i < scoreRows.length; i++) {
-      html += '<tr class="tbl-pts-row"><td class="col-name">' + esc(scoreRows[i].name) + '</td>';
+      html += '<tr class="tbl-pts-row"><td class="col-name">' + splitNameHtml(scoreRows[i].name) + '</td>';
       html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
       for (var h = 0; h < H; h++) html += '<td class="col-hole">' + esc((ptH[i]&&ptH[i][h])||'') + '</td>';
       html += '<td class="col-tot">' + esc(ptT[i]||'') + '</td></tr>';
@@ -1364,15 +1382,15 @@ function renderSkins(vm) {
   for (var h = 0; h < H; h++) out += '<th>' + esc(hcaps[h]||'—') + '</th>';
   out += '<th></th></tr><tr class="pRow"><th class="cGolfer par-lbl">Par</th><th class="cInfo"></th>';
   for (var h = 0; h < H; h++) out += '<th>' + esc(pars[h]||'—') + '</th>';
-  out += '<th></th></tr><tr class="lRow"><th class="cGolfer">Golfer</th><th class="cInfo">Crs/<br>Ski</th>';
+  out += '<th></th></tr><tr class="lRow"><th class="cGolfer">Golfer</th><th class="cInfo">CHP/<br>SHP</th>';
   for (var h = 0; h < H; h++) { var lbl2 = String(labels[h]||('Hole '+(h+1))).trim(); var hNum = lbl2.match(/\d+/); out += '<th>' + (hNum ? hNum[0] : esc(lbl2)) + '</th>'; }
   out += '<th>Total</th></tr></thead><tbody>';
 
   golfers.forEach(function(gl, gi) {
     var grossTot=0, grossFilled=0, adjTot=0;
     gl.raw.forEach(function(v,h){if(v!==null){grossTot+=v;grossFilled++;adjTot+=gl.adj[h];}});
-    out += '<tr class="golfer-row"><td class="cGolfer"><div style="font-weight:700;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(gl.name) + '</div></td>';
-    out += '<td class="cInfo"><div style="font-size:9px;color:var(--text-muted)">Crs</div><div style="font-weight:700;font-size:11px">' + esc(gl.ch) + '</div><div style="font-size:9px;color:var(--text-muted);margin-top:1px">Ski</div><div style="font-weight:700;font-size:11px;color:var(--success)">' + esc(gl.sHcp) + '</div></td>';
+    out += '<tr class="golfer-row"><td class="cGolfer"><div style="font-weight:700;font-size:11px;line-height:1.3">' + splitNameHtml(gl.name) + '</div></td>';
+    out += '<td class="cInfo"><div style="font-size:9px;color:var(--text-muted)">CHP</div><div style="font-weight:700;font-size:11px">' + esc(gl.ch) + '</div><div style="font-size:9px;color:var(--text-muted);margin-top:1px">SHP</div><div style="font-weight:700;font-size:11px;color:var(--success)">' + esc(gl.sHcp) + '</div></td>';
     for (var h = 0; h < H; h++) {
       var rv=gl.raw[h], av=gl.adj[h], stv=gl.st[h];
       var isBest=(holeWinner[h]===gi);
@@ -1388,14 +1406,7 @@ function renderSkins(vm) {
     out += '</td></tr>';
   });
 
-  out += '<tr class="tot-row"><td class="cGolfer">Result</td><td></td>';
-  for (var h = 0; h < H; h++) {
-    var w = holeWinner[h];
-    if(w===null) out+='<td>—</td>';
-    else if(w===-1) out+='<td style="font-size:12px;color:var(--gold)">Push</td>';
-    else out+='<td class="winner">'+esc(golfers[w].name.split(' ')[0])+'</td>';
-  }
-  out += '<td></td></tr></tbody></table></div>';
+  out += '</tbody></table></div>';
 
   var totalSkins = skinCount.reduce(function(a,b){return a+b;},0);
   out += '<div class="skins-summary-section"><div class="skins-summary">';
@@ -1525,22 +1536,35 @@ function renderEntryTable(res) {
     var g = golfers[i];
     var gScores = scores[i] || [];
     var isAbsent = String(g.absent||'').toLowerCase().includes('yes');
+    var gCH = parseInt(String(g.courseHandicap||'').replace(/[^0-9]/g,''), 10) || 0;
+    var gSt = distributeStrokes(gCH, hcaps, pars);
+    var absProjEntry = isAbsent ? calcAbsentProjection(gCH, hcaps, pars, 0) : null;
     var initTot = 0;
-    for (var h = 0; h < H; h++) { if (!isAbsent) { var sv = parseInt(String(gScores[h]||''), 10); if (isFinite(sv)&&sv>0) initTot += sv; } }
+    if (isAbsent && absProjEntry) {
+      for (var h0 = 0; h0 < H; h0++) initTot += (absProjEntry.gross[h0] || 0);
+    } else if (!isAbsent) {
+      for (var h0 = 0; h0 < H; h0++) { var sv0 = parseInt(String(gScores[h0]||''), 10); if (isFinite(sv0)&&sv0>0) initTot += sv0; }
+    }
 
     html += '<tr class="e-player-row">';
-    html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + esc(g.name||'—') + '</span>';
+    html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + splitNameHtml(g.name||'—') + '</span>';
     html += '<div class="absent-toggle-wrap"><span class="absent-toggle-label">Abs</span>';
     html += '<label><input type="checkbox" class="toggle-input" id="abs-'+i+'" '+(isAbsent?'checked ':'')+' onchange="toggleAbsentRow('+i+',this.checked)"><span class="toggle-track"></span></label>';
     html += '</div></div></td>';
     for (var h = 0; h < H; h++) {
-      var existing = gScores[h] || '';
-      var numVal = parseInt(String(existing), 10);
-      var valStr = (!isAbsent && isFinite(numVal) && numVal > 0) ? String(numVal) : '';
-      html += '<td class="entry-col-hole"><input type="number" min="1" max="12" class="score-inp'+(isAbsent?' absent':'') + '"';
-      html += ' value="'+valStr+'" id="inp-'+i+'-h'+h+'"';
-      html += (isAbsent ? ' readonly' : '');
-      html += ' oninput="calcEntryTotal('+i+')"></td>';
+      var stv = gSt[h];
+      var smHtml = stv > 0 ? '<span class="e-stroke-mark">' + strokeLabel(stv) + '</span>' : '<span class="e-stroke-mark"></span>';
+      if (isAbsent) {
+        var projVal = absProjEntry ? String(absProjEntry.gross[h]) : '';
+        html += '<td class="entry-col-hole"><div class="entry-hole-wrap">' + smHtml;
+        html += '<input type="number" min="1" max="12" class="score-inp absent" value="' + projVal + '" id="inp-'+i+'-h'+h+'" readonly></div></td>';
+      } else {
+        var existing = gScores[h] || '';
+        var numVal = parseInt(String(existing), 10);
+        var valStr = (isFinite(numVal) && numVal > 0) ? String(numVal) : '';
+        html += '<td class="entry-col-hole"><div class="entry-hole-wrap">' + smHtml;
+        html += '<input type="number" min="1" max="12" class="score-inp" value="' + valStr + '" id="inp-'+i+'-h'+h+'" oninput="calcEntryTotal('+i+')"></div></td>';
+      }
     }
     html += '<td class="entry-col-tot"><div class="e-tot-cell'+(isAbsent?' e-tot-absent':'')+'" id="tot-'+i+'">'+(initTot>0?initTot:'—')+'</div></td>';
     html += '</tr>';
@@ -1569,16 +1593,38 @@ window.calcEntryTotal = function(i) {
 };
 
 window.toggleAbsentRow = function(i, absent) {
-  var H = S.entryGroupData ? (S.entryGroupData.holeLabels||[]).length : 9;
+  var gd = S.entryGroupData;
+  var hcapsTog = gd ? (gd.holeHandicaps||[]) : [];
+  var parsTog  = gd ? (gd.holePars||[]) : [];
+  var golfersTog = gd ? (gd.golfers||[]) : [];
+  var H = hcapsTog.length || 9;
+  var togCH = 0;
+  if (golfersTog[i]) togCH = parseInt(String(golfersTog[i].courseHandicap||'').replace(/[^0-9]/g,''), 10) || 0;
+  var togProj = absent ? calcAbsentProjection(togCH, hcapsTog, parsTog, 0) : null;
+
   for (var h = 0; h < H; h++) {
     var inp = el('inp-'+i+'-h'+h);
     if (!inp) continue;
-    inp.value = '';
-    if (absent) { inp.classList.add('absent'); inp.setAttribute('readonly',''); }
-    else { inp.classList.remove('absent'); inp.removeAttribute('readonly'); }
+    if (absent) {
+      inp.classList.add('absent');
+      inp.setAttribute('readonly','');
+      inp.value = togProj ? String(togProj.gross[h]) : '';
+    } else {
+      inp.classList.remove('absent');
+      inp.removeAttribute('readonly');
+      inp.value = '';
+    }
   }
   var totEl = el('tot-'+i);
-  if (totEl) { totEl.classList.toggle('e-tot-absent', absent); totEl.textContent = '—'; }
+  if (totEl) {
+    totEl.classList.toggle('e-tot-absent', absent);
+    if (absent && togProj) {
+      var togTotal = togProj.gross.reduce(function(a, b) { return a + b; }, 0);
+      totEl.textContent = togTotal > 0 ? togTotal : '—';
+    } else {
+      totEl.textContent = '—';
+    }
+  }
   if (!absent) window.calcEntryTotal(i);
   updateAbsentBanner();
 };

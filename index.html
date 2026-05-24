@@ -363,7 +363,7 @@ html, body {
 .sc-net { font-size: 10px; font-weight: 600; color: var(--success); line-height: 1; margin-top: 3px; }
 .stroke-mark { color: var(--gold); font-size: 10px; font-weight: 900; vertical-align: super; line-height: 0; position: relative; top: -1px; }
 .absent-row td { background: rgba(246,195,67,0.04) !important; }
-.absent-row td.col-name, .absent-row td.col-tot { background: rgba(246,195,67,0.06) !important; }
+.absent-row td.col-name, .absent-row td.col-tot { background: #14192e !important; } /* fully opaque — transparent sticky cells let scrolling content bleed through */
 
 .tot-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 2px; padding: 4px; }
 .tot-gross { font-size: 13px; font-weight: 900; color: var(--text); line-height: 1; }
@@ -372,6 +372,15 @@ html, body {
 .tbl-pts-row td { height: 36px; background: rgba(13,22,40,0.8); text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); }
 .tbl-pts-row td.col-name { text-align: left; padding-left: 8px; color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; background: var(--card); }
 .tbl-pts-row td.col-tot { background: var(--card); }
+
+/* Team summary below scorecard */
+.team-summary-row { display: flex; gap: 10px; padding: 10px 8px 4px; flex-wrap: wrap; }
+.team-chip { display: flex; align-items: center; gap: 10px; background: rgba(15,122,58,0.10); border: 1px solid rgba(15,122,58,0.28); border-radius: var(--r); padding: 8px 14px; }
+.team-chip-label { font-size: 13px; font-weight: 900; color: #9ad1ff; letter-spacing: 0.3px; }
+.team-chip-divider { width: 1px; height: 18px; background: var(--border); }
+.team-chip-block { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.team-chip-val { font-size: 16px; font-weight: 900; color: var(--success); line-height: 1; }
+.team-chip-lbl { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.4px; }
 
 /* ════════════════════════════════════
    PAGE 2: VIEWER
@@ -396,7 +405,7 @@ html, body {
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   padding: var(--sp2);
 }
-.entry-dropdowns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.entry-dropdowns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 .select-wrap { display: flex; flex-direction: column; gap: 3px; }
 .select-label { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
 .styled-select {
@@ -433,6 +442,29 @@ html, body {
 .chip-info { background: var(--card2); color: var(--text-muted); border-color: var(--border); }
 .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
+/* ── GROUP CARD PICKER ── */
+.group-picker-wrap { padding: 10px 16px 4px; }
+.group-picker-title { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.group-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: var(--r);
+  background: var(--card); border: 1px solid var(--border);
+  margin-bottom: 8px; cursor: pointer;
+  transition: border-color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.group-card:active { background: var(--card3); }
+.group-card.selected { border-color: var(--accent); background: rgba(15,122,58,0.09); }
+.group-card-badge {
+  font-size: 11px; font-weight: 900; color: var(--success);
+  background: rgba(15,122,58,0.12); border: 1px solid rgba(15,122,58,0.28);
+  border-radius: var(--r); padding: 5px 10px; white-space: nowrap; flex-shrink: 0;
+  min-width: 62px; text-align: center; line-height: 1.2;
+}
+.group-card.selected .group-card-badge { background: var(--accent); color: #fff; border-color: var(--accent); }
+.group-card-names { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; min-width: 0; }
+
 .entry-table-wrap { padding: var(--sp2); padding-top: 0; }
 .entry-outer { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .entry-outer::-webkit-scrollbar { height: 4px; }
@@ -453,10 +485,11 @@ html, body {
 .entry-tbl .e-par-row td { color: var(--text-muted); }
 .entry-tbl .e-hcp-row td.entry-col-name, .entry-tbl .e-par-row td.entry-col-name { text-align: left; padding-left: 8px; background: var(--card); font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
 .entry-tbl .e-hcp-row td.entry-col-tot, .entry-tbl .e-par-row td.entry-col-tot { background: var(--card); }
-.entry-tbl .e-player-row td { background: var(--card); height: 72px; }
+.entry-tbl .e-player-row td { background: var(--card); height: 86px; }
 
 .entry-name-cell { display: flex; flex-direction: column; gap: 3px; padding: 4px 5px; height: 100%; justify-content: center; overflow: hidden; }
 .entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; }
+.entry-golfer-info { font-size: 9px; font-weight: 600; color: var(--text-dim); line-height: 1.2; letter-spacing: 0.2px; }
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
 .toggle-input { display: none; }
@@ -696,16 +729,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
     <div class="entry-dropdowns">
       <div class="select-wrap">
         <label class="select-label">Week</label>
-        <select class="styled-select" id="entry-week-select"><option>Loading…</option></select>
-      </div>
-      <div class="select-wrap">
-        <label class="select-label">Group</label>
-        <select class="styled-select" id="entry-group-select">
-          <option value="1">Group 1</option><option value="2">Group 2</option>
-          <option value="3">Group 3</option><option value="4">Group 4</option>
-          <option value="5">Group 5</option><option value="6">Group 6</option>
-          <option value="7">Group 7</option>
-        </select>
+        <select class="styled-select" id="entry-week-select" onchange="onWeekChange()"><option>Loading…</option></select>
       </div>
       <div class="select-wrap">
         <label class="select-label">Your Name</label>
@@ -715,19 +739,17 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
       </div>
     </div>
     <div class="entry-action-row">
-      <button class="btn-outlined" onclick="loadEntryGroup()">Load Group</button>
       <button class="btn-filled" id="checkout-btn" onclick="checkoutEntry()">Check Out</button>
       <button class="btn-outlined" id="release-btn" onclick="releaseEntry()" style="display:none">Release</button>
     </div>
     <div id="entry-chips-area" class="entry-chips">
-      <span class="status-chip chip-info"><span class="chip-dot"></span>Select week &amp; group</span>
+      <span class="status-chip chip-info"><span class="chip-dot"></span>Select week, then tap a group</span>
     </div>
   </div>
 
+  <div id="group-picker-area"></div>
   <div id="absent-banner-wrap"></div>
-  <div class="entry-table-wrap mt2" id="entry-table-wrap">
-    <div class="load-msg">Select week and group, then tap Load Group.</div>
-  </div>
+  <div class="entry-table-wrap mt2" id="entry-table-wrap"></div>
 
   <div class="submit-footer" id="submit-footer" style="display:none">
     <div class="submit-footer-info">
@@ -793,7 +815,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '2';
+var APP_VERSION = '4';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1221,6 +1243,23 @@ function renderScorecardTable(G, holes, hcaps, pars) {
   }
 
   html += '</tbody></table>';
+
+  /* ── Team weekly summary ── */
+  var teamFromU2 = G.pointsTeamFromU || [];
+  var weekTeam2  = G.weekTeamTotals  || {};
+  var t1Name = '', t2Name = '';
+  for (var ti = 0; ti < teamFromU2.length; ti++) { var tv = String(teamFromU2[ti]||'').trim(); if (tv && ti <= 1 && !t1Name) t1Name = tv; if (tv && ti >= 2 && !t2Name) t2Name = tv; }
+  if (t1Name || t2Name) {
+    html += '<div class="team-summary-row">';
+    if (t1Name) {
+      html += '<div class="team-chip"><span class="team-chip-label">' + esc(t1Name) + '</span><div class="team-chip-divider"></div><div class="team-chip-block"><span class="team-chip-val">' + esc(weekTeam2.team1Total !== undefined ? weekTeam2.team1Total : '—') + '</span><span class="team-chip-lbl">Week Pts</span></div></div>';
+    }
+    if (t2Name) {
+      html += '<div class="team-chip"><span class="team-chip-label">' + esc(t2Name) + '</span><div class="team-chip-divider"></div><div class="team-chip-block"><span class="team-chip-val">' + esc(weekTeam2.team2Total !== undefined ? weekTeam2.team2Total : '—') + '</span><span class="team-chip-lbl">Week Pts</span></div></div>';
+    }
+    html += '</div>';
+  }
+
   html += '<div style="padding:8px 12px;font-size:12px;color:var(--text-dim)"><span style="color:var(--gold);font-weight:900">*</span> 1 stroke &nbsp; <span style="color:var(--gold);font-weight:900">**</span> 2 strokes &nbsp; <span style="opacity:.6">Top = gross · Bottom = net</span></div>';
   return html;
 }
@@ -1459,37 +1498,97 @@ function buildEntryControls(res) {
   }
 
   updateEntryCheckout();
+  // Auto-load group picker for the first (most recent) week
+  if (weeks.length) onWeekChange();
 }
 
-window.loadEntryGroup = function() {
-  var weekName = el('entry-week-select').value;
-  var group = el('entry-group-select').value;
-  if (!weekName || !group) return;
-
+/* Week dropdown change → fetch group roster → show picker */
+window.onWeekChange = function() {
+  var weekSel = el('entry-week-select');
+  var weekName = weekSel ? weekSel.value : '';
+  if (!weekName) return;
+  S.entryCurrentWeek = weekName;
+  // Reset group selection
+  S.entryGroupData = null;
+  S.entryCurrentGroup = null;
   S.entryLock = null;
-  el('entry-table-wrap').innerHTML = '<div class="load-msg">Loading group…</div>';
+  el('entry-table-wrap').innerHTML = '';
   el('submit-footer').style.display = 'none';
+  el('absent-banner-wrap').innerHTML = '';
+  el('entry-chips-area').innerHTML = '<span class="status-chip chip-info"><span class="chip-dot"></span>Select a group below</span>';
+  updateEntryCheckout();
+
+  el('group-picker-area').innerHTML = '<div class="load-msg" style="padding:14px 16px">Loading groups…</div>';
+
+  // Reuse cached viewer data if already fetched
+  if (S.viewerWeekData && S.viewerWeekData[weekName] && (S.viewerWeekData[weekName].groups || []).length) {
+    renderGroupPicker(weekName, S.viewerWeekData[weekName].groups);
+    return;
+  }
+
+  gasGet('viewerWeek', {name: weekName}).then(function(res) {
+    if (!res || !res.ok || !(res.groups || []).length) {
+      el('group-picker-area').innerHTML = '<div class="load-error" style="padding:14px 16px">Could not load groups</div>';
+      return;
+    }
+    if (!S.viewerWeekData) S.viewerWeekData = {};
+    S.viewerWeekData[weekName] = res;
+    renderGroupPicker(weekName, res.groups);
+  }).catch(function() {
+    el('group-picker-area').innerHTML = '<div class="load-error" style="padding:14px 16px">Error loading groups</div>';
+  });
+};
+
+function renderGroupPicker(weekName, groups) {
+  var html = '<div class="group-picker-wrap">';
+  html += '<div class="group-picker-title">Select your group</div>';
+  for (var i = 0; i < groups.length; i++) {
+    var G = groups[i];
+    var gNum = G.group || (i + 1);
+    var names = (G.rows || []).map(function(r) { return r.name || ''; }).filter(Boolean).join(' · ');
+    html += '<div class="group-card" id="gc-' + gNum + '" onclick="selectGroupCard(' + gNum + ')">';
+    html += '<span class="group-card-badge">Group ' + gNum + '</span>';
+    html += '<span class="group-card-names">' + esc(names) + '</span>';
+    html += '</div>';
+  }
+  html += '</div>';
+  el('group-picker-area').innerHTML = html;
+}
+
+window.selectGroupCard = function(group) {
+  // Highlight selected card
+  var area = el('group-picker-area');
+  if (area) {
+    var cards = area.querySelectorAll('.group-card');
+    for (var ci = 0; ci < cards.length; ci++) cards[ci].classList.remove('selected');
+  }
+  var card = el('gc-' + group);
+  if (card) card.classList.add('selected');
+
+  var weekName = S.entryCurrentWeek;
+  if (!weekName) return;
+  S.entryLock = null;
+  S.entryCurrentGroup = group;
+  el('entry-table-wrap').innerHTML = '<div class="load-msg" style="padding:16px">Loading group ' + group + '…</div>';
+  el('submit-footer').style.display = 'none';
+  el('absent-banner-wrap').innerHTML = '';
+  updateEntryCheckout();
 
   gasGet('weekGroup', {sheet: weekName, group: group}).then(function(res) {
-    if (!res || !res.ok) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(res&&res.error||'No data') + '</div>'; return; }
-    S.entryGroupData = res;
-    S.entryCurrentWeek = weekName;
-    S.entryCurrentGroup = group;
-    S.entryGolfers = (res.golfers||[]).map(function(g){return g.name;});
-    S.entryLock = res.lock || null;
-
-    // Update group options for this week
-    if (S.entryInit) {
-      var wk = (S.entryInit.weeks||[]).filter(function(w){return w.id===weekName;})[0];
-      if (wk) {
-        var maxG = wk.groups||7, opts = '';
-        for (var g = 1; g <= maxG; g++) opts += '<option value="'+g+'"'+(String(g)===String(group)?' selected':'')+'>'+'Group '+g+'</option>';
-        el('entry-group-select').innerHTML = opts;
-      }
+    if (!res || !res.ok) {
+      el('entry-table-wrap').innerHTML = '<div class="load-error" style="padding:16px">Error: ' + esc(res && res.error || 'No data') + '</div>';
+      return;
     }
-
+    S.entryGroupData = res;
+    S.entryGolfers = (res.golfers || []).map(function(g) { return g.name; });
+    S.entryLock = res.lock || null;
     renderEntryTable(res);
-  }).catch(function(err) { el('entry-table-wrap').innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+    // Scroll scorecard into view
+    var tw = el('entry-table-wrap');
+    if (tw) setTimeout(function() { tw.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 60);
+  }).catch(function(err) {
+    el('entry-table-wrap').innerHTML = '<div class="load-error" style="padding:16px">Error: ' + esc(String(err)) + '</div>';
+  });
 };
 
 function updateAbsentBanner() {
@@ -1510,6 +1609,7 @@ function updateAbsentBanner() {
 
 function renderEntryTable(res) {
   var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
+  var strokeTotals = res.strokeTotals || []; // match-play strokes from API (flight differential, not full CH)
   var H = holes.length;
 
   var lock = S.entryLock;
@@ -1537,8 +1637,9 @@ function renderEntryTable(res) {
     var gScores = scores[i] || [];
     var isAbsent = String(g.absent||'').toLowerCase().includes('yes');
     var gCH = parseInt(String(g.courseHandicap||'').replace(/[^0-9]/g,''), 10) || 0;
-    var gSt = distributeStrokes(gCH, hcaps, pars);
-    var absProjEntry = isAbsent ? calcAbsentProjection(gCH, hcaps, pars, 0) : null;
+    var gMatchStrokes = strokeTotals[i] || 0; // actual match-play strokes (flight differential from sheet)
+    var gSt = distributeStrokes(gMatchStrokes, hcaps, pars); // distribute match-play strokes across holes
+    var absProjEntry = isAbsent ? calcAbsentProjection(gCH, hcaps, pars, 0) : null; // absent projection still uses full CH
     var initTot = 0;
     if (isAbsent && absProjEntry) {
       for (var h0 = 0; h0 < H; h0++) initTot += (absProjEntry.gross[h0] || 0);
@@ -1548,6 +1649,7 @@ function renderEntryTable(res) {
 
     html += '<tr class="e-player-row">';
     html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + splitNameHtml(g.name||'—') + '</span>';
+    html += '<span class="entry-golfer-info">CH:' + esc(g.courseHandicap||'—') + ' · ' + esc(g.flight||'—') + (gMatchStrokes > 0 ? ' · ▲' + gMatchStrokes : '') + '</span>';
     html += '<div class="absent-toggle-wrap"><span class="absent-toggle-label">Abs</span>';
     html += '<label><input type="checkbox" class="toggle-input" id="abs-'+i+'" '+(isAbsent?'checked ':'')+' onchange="toggleAbsentRow('+i+',this.checked)"><span class="toggle-track"></span></label>';
     html += '</div></div></td>';

@@ -6,7 +6,7 @@
  *   - Everything else: network-first
  */
 
-const CACHE_NAME   = 'tol-v6';
+const CACHE_NAME   = 'tol-v8';
 const GAS_ORIGIN   = 'script.google.com';
 const FONT_ORIGIN  = 'fonts.googleapis.com';
 const GSTATIC      = 'fonts.gstatic.com';

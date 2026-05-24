@@ -493,6 +493,7 @@ html, body {
 .entry-name-cell { display: flex; flex-direction: column; gap: 3px; padding: 4px 5px; height: 100%; justify-content: center; overflow: hidden; }
 .entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; }
 .entry-golfer-info { font-size: 9px; font-weight: 600; color: var(--text-dim); line-height: 1.2; letter-spacing: 0.2px; }
+.entry-golfer-strokes { color: var(--gold) !important; font-weight: 700 !important; }
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
 .toggle-input { display: none; }
@@ -818,7 +819,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '5';
+var APP_VERSION = '7';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1280,7 +1281,7 @@ function renderScorecardTable(G, holes, hcaps, pars) {
       html += '<td class="col-hole"></td><td class="col-hole"></td><td class="col-hole"></td>';
       for (var h = 0; h < H; h++) html += '<td class="col-hole"></td>';
       html += '<td class="col-team" style="font-size:10px;font-weight:700;color:#9ad1ff">' + esc(t2Name) + '</td>';
-      html += '<td class="col-netpts" style="font-weight:700;color:var(--success)">' + esc(netFromT[1] !== undefined ? netFromT[1] : '') + '</td>';
+      html += '<td class="col-netpts" style="font-weight:700;color:var(--success)">' + esc(netFromT[2] !== undefined ? netFromT[2] : '') + '</td>';
       html += '<td class="col-tpts" style="font-weight:700;color:var(--success)">' + esc(weekTeam.team2Total !== undefined ? weekTeam.team2Total : '—') + '</td>';
       html += '<td class="col-tot"></td></tr>';
     }
@@ -1676,7 +1677,8 @@ function renderEntryTable(res) {
 
     html += '<tr class="e-player-row">';
     html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + splitNameHtml(g.name||'—') + '</span>';
-    html += '<span class="entry-golfer-info">CH:' + esc(g.courseHandicap||'—') + ' · ' + esc(g.flight||'—') + (gMatchStrokes > 0 ? ' · ▲' + gMatchStrokes : '') + '</span>';
+    html += '<span class="entry-golfer-info">CH:' + esc(g.courseHandicap||'—') + ' · ' + esc(g.flight||'—') + '</span>';
+    html += '<span class="entry-golfer-info entry-golfer-strokes">' + (gMatchStrokes > 0 ? '▲ ' + gMatchStrokes + ' strokes' : '') + '</span>';
     html += '<div class="absent-toggle-wrap"><span class="absent-toggle-label">Abs</span>';
     html += '<label><input type="checkbox" class="toggle-input" id="abs-'+i+'" '+(isAbsent?'checked ':'')+' onchange="toggleAbsentRow('+i+',this.checked)"><span class="toggle-track"></span></label>';
     html += '</div></div></td>';

@@ -509,7 +509,7 @@ html, body {
 .entry-tbl th, .entry-tbl td { border-bottom: 1px solid rgba(30,45,74,0.6); border-right: 1px solid rgba(30,45,74,0.4); padding: 0; vertical-align: middle; }
 .entry-tbl th:last-child, .entry-tbl td:last-child { border-right: none; }
 
-.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 68px; overflow: hidden; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
+.entry-col-name { position: sticky; left: 0; z-index: 3; background: var(--card); min-width: 80px; max-width: 80px; overflow: hidden; box-shadow: 3px 0 10px rgba(0,0,0,0.4); }
 .entry-col-tot { position: sticky; right: 0; z-index: 3; background: var(--card); min-width: 34px; text-align: center; box-shadow: -3px 0 10px rgba(0,0,0,0.4); }
 .entry-col-hole { min-width: 28px; text-align: center; }
 
@@ -528,10 +528,10 @@ html, body {
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
 .toggle-input { display: none; }
-.toggle-track { width: 36px; height: 22px; border-radius: 11px; background: var(--border2); position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
-.toggle-track::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.toggle-track { width: 34px; height: 19px; border-radius: 10px; background: var(--border2); position: relative; cursor: pointer; transition: background 0.22s; flex-shrink: 0; }
+.toggle-track::before { content: ''; position: absolute; width: 15px; height: 15px; border-radius: 50%; background: rgba(232,238,252,0.55); top: 2px; left: 2px; transition: transform 0.22s, background 0.22s; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
 .toggle-input:checked + .toggle-track { background: var(--accent); }
-.toggle-input:checked + .toggle-track::before { transform: translateX(14px); }
+.toggle-input:checked + .toggle-track::before { transform: translateX(15px); background: #fff; }
 
 .score-inp {
   width: 22px; height: 30px; background: var(--card2); border: 1px solid var(--border2);
@@ -872,7 +872,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '8';
+var APP_VERSION = '9';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {

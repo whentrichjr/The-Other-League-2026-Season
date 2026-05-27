@@ -524,8 +524,10 @@ html, body {
 .entry-name-cell { display: flex; flex-direction: column; gap: 3px; padding: 4px 5px; height: 100%; justify-content: center; overflow: hidden; }
 .entry-player-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; }
 .entry-golfer-info { font-size: 9px; font-weight: 600; color: var(--text-dim); line-height: 1.2; letter-spacing: 0.2px; }
-.entry-golfer-strokes { color: var(--gold) !important; font-weight: 700 !important; }
+.entry-golfer-strokes { color: var(--gold); font-weight: 700; }
 .absent-toggle-wrap { display: flex; align-items: center; gap: 5px; }
+.score-inp[readonly]:not(.absent) { opacity: 0.38; cursor: not-allowed; }
+.toggle-input:disabled + .toggle-track { opacity: 0.38; cursor: not-allowed; }
 .absent-toggle-label { font-size: 9px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3px; }
 .toggle-input { display: none; }
 .toggle-track { width: 34px; height: 19px; border-radius: 10px; background: var(--border2); position: relative; cursor: pointer; transition: background 0.22s; flex-shrink: 0; }
@@ -872,7 +874,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '10';
+var APP_VERSION = '11';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1702,6 +1704,23 @@ function updateAbsentBanner() {
   }
 }
 
+function setEntryEditable(editable) {
+  var tw = el('entry-table-wrap');
+  if (!tw) return;
+  // Non-absent score inputs: readonly when locked, editable when checked out
+  var inputs = tw.querySelectorAll('.score-inp:not(.absent)');
+  for (var ii = 0; ii < inputs.length; ii++) {
+    if (editable) inputs[ii].removeAttribute('readonly');
+    else inputs[ii].setAttribute('readonly', '');
+  }
+  // ABS toggles: disabled when locked
+  var toggles = tw.querySelectorAll('.toggle-input');
+  for (var ii = 0; ii < toggles.length; ii++) {
+    if (editable) toggles[ii].removeAttribute('disabled');
+    else toggles[ii].setAttribute('disabled', '');
+  }
+}
+
 function renderEntryTable(res) {
   var golfers = res.golfers||[], holes = res.holeLabels||[], hcaps = res.holeHandicaps||[], pars = res.holePars||[], scores = res.existingScores||[];
   var strokeTotals = res.strokeTotals || []; // match-play strokes from API (flight differential, not full CH)
@@ -1744,8 +1763,8 @@ function renderEntryTable(res) {
 
     html += '<tr class="e-player-row">';
     html += '<td class="entry-col-name"><div class="entry-name-cell"><span class="entry-player-name">' + splitNameHtml(g.name||'—') + '</span>';
-    html += '<span class="entry-golfer-info">CH:' + esc(g.courseHandicap||'—') + ' · ' + esc(g.flight||'—') + '</span>';
-    html += '<span class="entry-golfer-info entry-golfer-strokes">' + (gMatchStrokes > 0 ? '▲ ' + gMatchStrokes + ' strokes' : '') + '</span>';
+    var strokesBit = gMatchStrokes > 0 ? ' <span class="entry-golfer-strokes">▲' + gMatchStrokes + '</span>' : '';
+    html += '<span class="entry-golfer-info">CH:' + esc(g.courseHandicap||'—') + ' · ' + esc(g.flight||'—') + strokesBit + '</span>';
     html += '<div class="absent-toggle-wrap"><span class="absent-toggle-label">Abs</span>';
     html += '<label><input type="checkbox" class="toggle-input" id="abs-'+i+'" '+(isAbsent?'checked ':'')+' onchange="toggleAbsentRow('+i+',this.checked)"><span class="toggle-track"></span></label>';
     html += '</div></div></td>';
@@ -1775,6 +1794,8 @@ function renderEntryTable(res) {
   el('submit-footer').style.display = '';
   updateEntryCheckout();
   updateAbsentBanner();
+  var isCheckedOut = !!(S.entryLock && S.entryMarkerName && S.entryLock.lockedBy === S.entryMarkerName);
+  setEntryEditable(isCheckedOut);
 }
 
 window.calcEntryTotal = function(i) {
@@ -1868,6 +1889,7 @@ function updateEntryCheckout() {
     if (releaseBtn) releaseBtn.style.display = 'none';
   }
   if (submitBtn) submitBtn.disabled = !checkedOut;
+  setEntryEditable(checkedOut);
 }
 
 window.checkoutEntry = function() {

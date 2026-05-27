@@ -872,7 +872,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '9';
+var APP_VERSION = '10';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -968,7 +968,20 @@ document.querySelector('.btm-nav').style.display = 'none';
 
 /* ── SERVICE WORKER ─────────────────────────────────── */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+  navigator.serviceWorker.register('./service-worker.js', {updateViaCache: 'none'})
+    .then(function(reg) {
+      // Force the browser to check for a new SW on every page load,
+      // bypassing any HTTP cache on service-worker.js itself.
+      reg.update();
+
+      // When a new SW installs and calls skipWaiting → clients.claim,
+      // the controllerchange event fires. Auto-reload so the user is
+      // instantly on the new version without needing to tap the banner.
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        window.location.reload();
+      });
+    })
+    .catch(function() {});
 }
 
 /* ════════════════════════════════════════════════════════

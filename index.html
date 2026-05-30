@@ -424,9 +424,21 @@ html, body {
 
 /* League table */
 .league-tbl { border-collapse: separate; border-spacing: 0; font-size: 12px; width: 100%; }
-.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 30px; padding: 4px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-.league-tbl td { padding: 5px 8px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); }
+.league-tbl th { background: var(--card2); color: var(--text-dim); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.league-tbl td { padding: 5px 8px; border-bottom: 1px solid rgba(30,45,74,0.4); color: var(--text-muted); white-space: nowrap; vertical-align: middle; }
 .league-tbl tr:nth-child(even) td { background: rgba(13,22,40,0.5); }
+/* Name cells allow multi-line (partner names on separate lines) */
+.league-tbl td.lt-name { white-space: normal; color: var(--text); font-weight: 700; line-height: 1.65; min-width: 130px; }
+.league-tbl th.lt-name { white-space: normal; }
+/* Rank / team badge cells */
+.league-tbl td.lt-rank { color: var(--text); font-weight: 800; font-size: 13px; }
+.league-tbl td.lt-team { color: var(--success); font-weight: 700; font-size: 11px; }
+/* Number / score cells */
+.league-tbl td.lt-num { color: var(--text-muted); text-align: center; }
+.league-tbl td.lt-total { color: var(--text); font-weight: 700; text-align: center; }
+/* Separator between team partners */
+.league-tbl tr.lt-partner-row td { border-bottom: none; padding-bottom: 2px; }
+.league-tbl tr.lt-team-row td { padding-top: 2px; border-bottom: 1px solid rgba(30,45,74,0.5); }
 
 /* ════════════════════════════════════
    PAGE 3: SCORE ENTRY
@@ -889,7 +901,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '12';
+var APP_VERSION = '13';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1111,23 +1123,25 @@ function buildViewerShell(res) {
     html += '</div>';
   }
 
+  var playoffWeeks = playoffs.filter(function(w) { return /^Playoff Week /i.test(w.name); });
+  var playoffInfo  = playoffs.filter(function(w) { return !/^Playoff Week /i.test(w.name); });
+
   html += '<div class="week-selector" id="viewer-week-pills">';
   weeks.forEach(function(w, i) {
     html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace('WEEK ','W')) + '</div>';
   });
-  var playoffWeeks = playoffs.filter(function(w) { return /^Playoff Week /i.test(w.name); });
-  var playoffInfo  = playoffs.filter(function(w) { return !/^Playoff Week /i.test(w.name); });
   playoffWeeks.forEach(function(w) {
     html += '<div class="week-pill" data-week="' + esc(w.name) + '" onclick="loadViewerWeek(\'' + jsStr(w.name) + '\', false)">' + esc(w.name.replace(/Playoff Week /i,'PO')) + '</div>';
+  });
+  // Playoff Format lives here in Scorecards — it gets referenced heavily during playoffs
+  playoffInfo.forEach(function(s) {
+    html += '<div class="week-pill" data-sheet="' + esc(s.name) + '" onclick="loadPlayoffPage(\'' + jsStr(s.name) + '\')">' + esc(s.name) + '</div>';
   });
   html += '</div>';
 
   html += '<div class="week-selector" id="viewer-league-pills" style="display:none">';
   leagues.forEach(function(s, i) {
     html += '<div class="week-pill' + (i === 0 ? ' active' : '') + '" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + jsStr(s.name) + '\')">' + esc(s.name.replace('League ','')) + '</div>';
-  });
-  playoffInfo.forEach(function(s) {
-    html += '<div class="week-pill" data-sheet="' + esc(s.name) + '" onclick="loadLeaguePage(\'' + jsStr(s.name) + '\')">' + esc(s.name) + '</div>';
   });
   html += '</div>';
 
@@ -1375,25 +1389,89 @@ function renderScorecardTable(G, holes, hcaps, pars) {
   return html;
 }
 
-function renderLeagueTable(res) {
-  var container = el('viewer-league-container');
+function loadPlayoffPage(name) {
+  // Deactivate all week pills, activate the playoff format pill
+  document.querySelectorAll('#viewer-week-pills .week-pill').forEach(function(p) {
+    p.classList.toggle('active', p.dataset.sheet === name);
+  });
+  setViewerMode('week');
+  var container = el('viewer-week-container');
   if (!container) return;
-  var values = res.values || [], frozen = res.frozen || {rows:0,cols:0};
-  var rows = values.length, cols = rows ? (values[0]?values[0].length:0) : 0;
-  if (!rows||!cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
-  var fr = Math.max(0, Number(frozen.rows||0));
-  var html = '<div style="overflow-x:auto;padding:var(--sp2)"><table class="league-tbl">';
+  if (S.viewerLeagueData[name]) { renderLeagueTable(S.viewerLeagueData[name], 'viewer-week-container'); return; }
+  container.innerHTML = '<div class="load-msg">Loading…</div>';
+  gasGet('leaguePage', {name: name}).then(function(res) {
+    if (!res || !res.ok) { container.innerHTML = '<div class="load-error">Error: ' + esc(res && res.error || 'No data') + '</div>'; return; }
+    S.viewerLeagueData[name] = res;
+    renderLeagueTable(res, 'viewer-week-container');
+  }).catch(function(err) { container.innerHTML = '<div class="load-error">Error: ' + esc(String(err)) + '</div>'; });
+}
+
+function renderLeagueTable(res, targetId) {
+  var container = el(targetId || 'viewer-league-container');
+  if (!container) return;
+  var values = res.values || [], frozen = res.frozen || {rows:0, cols:0};
+  var rows = values.length, cols = rows ? (values[0] ? values[0].length : 0) : 0;
+  if (!rows || !cols) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
+
+  var fr = Math.max(0, Number(frozen.rows || 0));
+  var fc = Math.max(0, Number(frozen.cols || 0));
+
+  // Detect column type from the last frozen row (actual column headers)
+  var hdrRow = fr > 0 ? (values[fr - 1] || []) : (values[0] || []);
+  function colType(c) {
+    var h = String(hdrRow[c] || '').toLowerCase().trim();
+    if (h === 'place' || h === '#' || h === 'rank') return 'rank';
+    if (h === 'team') return 'team';
+    if (h.includes('name')) return 'name';
+    if (h === 'total' || h === 'tot') return 'total';
+    if (h.includes('week') || /^w\s*\d/i.test(h)) return 'week';
+    // Heuristic from position when header is blank
+    if (c === 0) return fr > 0 ? 'rank' : 'name';
+    if (c === 1 && fc >= 2) return 'team';
+    if (c < fc) return 'name';
+    if (c === cols - 1 && fc > 0) return 'total';
+    return 'week';
+  }
+
+  function colWidth(c) {
+    switch (colType(c)) {
+      case 'rank':  return '36px';
+      case 'team':  return '46px';
+      case 'name':  return '145px';
+      case 'total': return '54px';
+      case 'week':  return '46px';
+      default:      return c < 3 ? '80px' : '50px';
+    }
+  }
+
+  // Escape + convert newlines → <br> so partner names split onto separate lines
+  function fmtCell(v) {
+    var s = String(v == null ? '' : v);
+    var safe = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return safe.replace(/\r?\n/g, '<br>');
+  }
+
+  var html = '<div style="overflow-x:auto;padding:var(--sp2)"><table class="league-tbl"><colgroup>';
+  for (var c = 0; c < cols; c++) html += '<col style="width:' + colWidth(c) + ';min-width:' + colWidth(c) + '">';
+  html += '</colgroup>';
+
   for (var r = 0; r < rows; r++) {
     var isH = r < Math.max(1, fr);
     html += '<tr>';
     for (var c = 0; c < cols; c++) {
-      var val = values[r][c] == null ? '' : String(values[r][c]);
-      var al = c === 0 ? 'text-align:left' : 'text-align:center';
-      if (isH) html += '<th style="' + al + '">' + esc(val) + '</th>';
-      else html += '<td style="' + al + '">' + esc(val) + '</td>';
+      var ct   = colType(c);
+      var fmt  = fmtCell(values[r][c]);
+      var align = (ct === 'name' || (c === 0 && ct === 'rank')) ? 'left' : 'center';
+      if (isH) {
+        html += '<th class="lt-' + ct + '" style="text-align:' + align + '">' + fmt + '</th>';
+      } else {
+        var cls = 'lt-' + (ct === 'week' ? 'num' : ct);
+        html += '<td class="' + cls + '" style="text-align:' + align + '">' + fmt + '</td>';
+      }
     }
     html += '</tr>';
   }
+
   html += '</table></div>';
   container.innerHTML = html;
 }
@@ -2012,6 +2090,7 @@ window.switchPage = switchPage;
 window.setViewerMode = setViewerMode;
 window.loadViewerWeek = loadViewerWeek;
 window.loadLeaguePage = loadLeaguePage;
+window.loadPlayoffPage = loadPlayoffPage;
 window.loadSkinsWeek = loadSkinsWeek;
 
 /* ════════════════════════════════════════════════════════

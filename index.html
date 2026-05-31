@@ -496,7 +496,22 @@ html, body {
 .lg-abs-cell { color: #f59e0b; font-weight: 700; text-align: center; }
 .lg-empty-cell { color: var(--text-dim); text-align: center; }
 .lg-total-cell { color: var(--text); font-weight: 800; text-align: center; }
-.lg-course-cell { font-size: 9.5px; color: var(--text-dim); text-align: center; }
+.lg-course-cell { font-size: 9.5px; color: var(--text-dim); text-align: center; white-space: normal !important; min-width: 42px; }
+.lg-title-hdr { text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: none; letter-spacing: 0; padding: 7px 10px; white-space: normal !important; }
+.lg-name-lbl { color: var(--text); font-weight: 700; font-size: 12px; white-space: normal; line-height: 1.5; }
+/* Handicap reference additions */
+.hcp-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+.hcp-table th { background: rgba(15,122,58,0.15); color: var(--success); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 8px; text-align: left; border-bottom: 1px solid rgba(15,122,58,0.3); }
+.hcp-table td { padding: 6px 8px; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid rgba(30,45,74,0.3); line-height: 1.4; vertical-align: middle; }
+.hcp-table td:first-child { color: var(--text); font-weight: 700; white-space: nowrap; }
+.hcp-table td:last-child { text-align: center; font-weight: 700; }
+.hcp-adj-nz { color: #f59e0b !important; }
+.hcp-bullet { font-size: 12.5px; color: var(--text-muted); line-height: 1.65; padding: 4px 0 4px 4px; }
+.hcp-bullet b, .hcp-bullet strong { color: var(--text); }
+.hcp-faq-cols { display: flex; flex-direction: column; gap: 0; margin-bottom: 8px; border-bottom: 1px solid rgba(15,122,58,0.2); padding-bottom: 10px; }
+.hcp-faq-q { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--success); padding: 3px 0; }
+.hcp-example { font-size: 12px; color: var(--text-muted); background: rgba(13,22,40,0.5); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 7px 10px; margin: 5px 0; line-height: 1.6; }
+.hcp-formula-box { background: rgba(15,122,58,0.08); border: 1px solid rgba(15,122,58,0.2); border-radius: 8px; padding: 9px 12px; margin: 5px 0; font-size: 12px; color: var(--text); line-height: 1.7; }
 
 /* ════════════════════════════════════
    PAGE 3: SCORE ENTRY
@@ -959,7 +974,7 @@ table.skins-grid { width: 100%; border-collapse: separate; border-spacing: 0; fo
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyEpoa-Ypq1LVgdDPBJWCec46HE-rYx9zwLipxpb1LDOL4lM2nQpdgCRp-yi75R3M7jXw/exec';
 
 /* ── APP VERSION (bump this + version.json on every deploy) ── */
-var APP_VERSION = '15';
+var APP_VERSION = '16';
 
 /* ── STATE ──────────────────────────────────────────── */
 var S = {
@@ -1615,63 +1630,149 @@ function renderLeagueHandicap(res, container) {
   var values = res.values || [];
   if (!values.length) { container.innerHTML = '<div class="load-msg">No data</div>'; return; }
 
-  // If mostly numeric data, fall through to data grid
-  var numericRows = values.filter(function(row) {
-    return row.filter(function(c) { return /^[\d.]+$/.test(String(c).trim()); }).length > 4;
-  });
-  if (numericRows.length > 5) { renderLeagueDataGrid(res, container); return; }
-
   var html = '<div class="league-page-wrap"><div class="hcp-ref-wrap">';
-  var cardTitle = null, cardRows = [];
+  var i = 0, n = values.length;
 
-  function flushCard() {
-    if (cardTitle == null && !cardRows.length) return;
-    html += '<div class="hcp-ref-card">';
-    if (cardTitle) html += '<div class="hcp-ref-title">' + esc(cardTitle) + '</div>';
-    cardRows.forEach(function(row) {
-      if (row.label && row.value) {
-        html += '<div class="hcp-row"><div class="hcp-row-lbl">' + fmtCell(row.label) + '</div><div class="hcp-row-val">' + fmtCell(row.value) + '</div></div>';
-      } else {
-        html += '<div class="hcp-para">' + fmtCell(row.text) + '</div>';
+  function getCells(r) { return (values[r] || []).map(function(c){ return String(c==null?'':c).trim(); }); }
+  function getNonEmpty(r) { return getCells(r).filter(Boolean); }
+
+  while (i < n) {
+    var row = getCells(i);
+    var ne = row.filter(Boolean);
+    if (!ne.length) { i++; continue; }
+    var f = ne.join(' ');
+
+    // ── Update/notice ──
+    if (/update|as of (the )?\d{4}/i.test(f)) {
+      html += '<div class="hcp-notice"><span class="hcp-notice-icon">📢</span>' + fmtCell(f) + '</div>';
+      i++; continue;
+    }
+
+    // ── Score differentials lookup table (header row detection) ──
+    if (/total\s*scores?\s*posted|scores?\s*posted/i.test(f) && ne.length >= 2) {
+      html += '<div class="hcp-ref-card"><div class="hcp-ref-title">Score Differentials Reference</div>';
+      html += '<table class="hcp-table"><thead><tr>';
+      row.filter(Boolean).forEach(function(h) { html += '<th>' + esc(h) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      i++;
+      while (i < n) {
+        var dr = getCells(i);
+        var dne = dr.filter(Boolean);
+        if (!dne.length) { i++; break; }
+        var first = dr[0];
+        if (/^(\d+\s*(or|to|-|–)\s*\d+|\d+\+?$)/i.test(first) || /^(lowest|average)/i.test(first)) {
+          var lastVal = dne[dne.length - 1];
+          var isNZ = lastVal && lastVal !== '0' && lastVal !== '0.0' && lastVal !== '';
+          html += '<tr>';
+          var maxC = dr.length;
+          while (maxC > 0 && !dr[maxC - 1]) maxC--;
+          for (var ci = 0; ci < maxC; ci++) {
+            var adjCls = (ci === maxC - 1 && isNZ) ? ' class="hcp-adj-nz"' : '';
+            html += '<td' + adjCls + '>' + esc(dr[ci]) + '</td>';
+          }
+          html += '</tr>';
+          i++;
+        } else { break; }
       }
-    });
-    html += '</div>';
-    cardTitle = null; cardRows = [];
+      html += '</tbody></table></div>';
+      continue;
+    }
+
+    // ── FAQ column headers (multi-column: Why… | How… | What is…) ──
+    if (ne.length >= 2 && /why\s+should|how\s+can\s+(i|you)|what\s+is\s+the\s+diff/i.test(f)) {
+      html += '<div class="hcp-ref-card"><div class="hcp-faq-cols">';
+      row.filter(Boolean).forEach(function(h) { html += '<div class="hcp-faq-q">' + esc(h) + '</div>'; });
+      html += '</div>';
+      i++;
+      while (i < n) {
+        var fr2 = getCells(i), fne2 = fr2.filter(Boolean);
+        if (!fne2.length) { i++; continue; }
+        var ff2 = fne2.join(' ');
+        // Stop at formula/numbered section
+        if (/^\d+\)/.test(fr2[0]) || /^your\s+course\s+handicap\s+on\s+diff/i.test(fr2[0])) break;
+        if (/^example|^because\s+of\s+the\s+diff|^using\s+the\s+example/i.test(fr2[0])) break;
+        // Bullet
+        if (/^[•\-]/.test(fr2[0]) || /^[•\-]/.test(ff2)) {
+          var bt = ff2.replace(/^[•\-\s]+/, '');
+          var bm = bt.match(/^(your\s+(handicap\s+)?index|your\s+course\s+handicap|your\s+playing\s+handicap)/i);
+          if (bm) {
+            html += '<div class="hcp-bullet">• <strong>' + esc(bm[0]) + '</strong>' + esc(bt.slice(bm[0].length)) + '</div>';
+          } else {
+            html += '<div class="hcp-bullet">• ' + esc(bt) + '</div>';
+          }
+        } else {
+          html += '<div class="hcp-para">' + fmtCell(ff2) + '</div>';
+        }
+        i++;
+      }
+      html += '</div>';
+      continue;
+    }
+
+    // ── Formula / numbered calculation section ──
+    if (/^your\s+course\s+handicap\s+on\s+diff/i.test(row[0])) {
+      html += '<div class="hcp-ref-card"><div class="hcp-ref-title">Course Handicap Formulas</div>';
+      i++;
+      while (i < n) {
+        var fr3 = getCells(i), fne3 = fr3.filter(Boolean);
+        if (!fne3.length) { i++; break; }
+        var ff3 = fne3.join(' ');
+        if (/^\d+\)/.test(fr3[0]) || /^handicap\s+index|^using\s+the\s+example/i.test(fr3[0]) ||
+            /^\(handicap\s+is/i.test(fr3[0])) {
+          html += '<div class="hcp-formula-box">' + fmtCell(ff3) + '</div>';
+        } else if (/^example|^because\s+of\s+the/i.test(fr3[0])) {
+          html += '<div class="hcp-example">' + fmtCell(ff3) + '</div>';
+        } else {
+          html += '<div class="hcp-para">' + fmtCell(ff3) + '</div>';
+        }
+        i++;
+      }
+      html += '</div>';
+      continue;
+    }
+
+    // ── Introductory paragraph or "The following…" line ──
+    if (ne.length === 1 && (row[0].length > 40 || /^the\s+(following|number)/i.test(row[0]))) {
+      html += '<div class="hcp-ref-card"><div class="hcp-para">' + fmtCell(row[0]) + '</div></div>';
+      i++; continue;
+    }
+
+    // ── Section title ──
+    if (ne.length === 1 && row[0].length < 100 &&
+        (/formulas|definitions|calculate|scoring/i.test(row[0]) || /:\s*$/.test(row[0]))) {
+      html += '<div class="hcp-ref-card"><div class="hcp-ref-title">' + esc(row[0].replace(/:$/, '').trim()) + '</div>';
+      i++;
+      while (i < n) {
+        var sc = getCells(i), sne = sc.filter(Boolean);
+        if (!sne.length) { i++; html += '</div>'; break; }
+        var sf = sne.join(' ');
+        if (/^[•\-]/.test(sc[0])) {
+          html += '<div class="hcp-bullet">• ' + esc(sf.replace(/^[•\-\s]+/, '')) + '</div>';
+        } else if (sc[0] && sc[1]) {
+          html += '<div class="hcp-row"><div class="hcp-row-lbl">' + fmtCell(sc[0]) + '</div><div class="hcp-row-val">' + fmtCell(sne.slice(1).join(' ')) + '</div></div>';
+        } else {
+          html += '<div class="hcp-para">' + fmtCell(sf) + '</div>';
+        }
+        i++;
+      }
+      continue;
+    }
+
+    // ── Generic label+value or paragraph ──
+    if (ne.length >= 2 && row[0]) {
+      html += '<div class="hcp-ref-card"><div class="hcp-row"><div class="hcp-row-lbl">' + fmtCell(row[0]) + '</div><div class="hcp-row-val">' + fmtCell(ne.slice(1).join(' ')) + '</div></div></div>';
+    } else {
+      html += '<div class="hcp-ref-card"><div class="hcp-para">' + fmtCell(f) + '</div></div>';
+    }
+    i++;
   }
 
-  for (var r = 0; r < values.length; r++) {
-    var cells = values[r].map(function(c) { return String(c == null ? '' : c).trim(); });
-    var nonEmpty = cells.filter(Boolean);
-    if (!nonEmpty.length) continue;
-    var full = nonEmpty.join(' ');
-
-    // Update/notice box
-    if (/update|as of the \d{4}|as of \d{4}/i.test(full)) {
-      flushCard();
-      html += '<div class="hcp-notice"><span class="hcp-notice-icon">📢</span>' + fmtCell(full) + '</div>';
-      continue;
-    }
-    // Section title
-    if (nonEmpty.length === 1 && cells[0].length < 80 &&
-        (/formulas|definitions|calculate|scoring/i.test(cells[0]) || /:\s*$/.test(cells[0]))) {
-      flushCard();
-      cardTitle = cells[0].replace(/:$/, '').trim();
-      continue;
-    }
-    // Two-column label + value
-    if (cells[0] && nonEmpty.length >= 2) {
-      cardRows.push({ label: cells[0], value: cells.slice(1).filter(Boolean).join(' ') });
-      continue;
-    }
-    cardRows.push({ text: full });
-  }
-  flushCard();
   html += '</div></div>';
   container.innerHTML = html;
 }
 
 /* ── Data grids: Weekly Score, Score Differentials, Points ── */
-var LG_FC_WIDTHS = [44, 125, 55, 38]; // sticky col widths: Team/Place, Names, Course, Par
+var LG_FC_WIDTHS = [44, 125, 55, 38]; // Team/Place, Names, Course/Tee, Par
 
 function renderLeagueDataGrid(res, container) {
   var values = res.values || [], frozen = res.frozen || {rows:1, cols:2};
@@ -1681,43 +1782,73 @@ function renderLeagueDataGrid(res, container) {
   var fr = Math.max(1, Number(frozen.rows || 1));
   var fc = Math.max(0, Number(frozen.cols || 0));
   var name = String(res.name || '').toLowerCase();
-  var isDiff    = name.includes('differential');
-  var isPoints  = name.includes('points');
+  var isDiff   = name.includes('differential');
+  var isPoints = name.includes('points');
+
+  // Score Differentials: ensure Team/Names/Tee cols are always frozen
+  if (isDiff) fc = Math.max(fc, 3);
 
   // Score Differentials: skip historical columns, show only current season
   var seasonStart = isDiff ? cols : 0;
   if (isDiff) {
     outerLoop: for (var hr = 0; hr < fr; hr++) {
       for (var hc = fc; hc < cols; hc++) {
-        var hv = String(values[hr][hc] || '').toLowerCase().trim();
-        if (/^week\s*1$/.test(hv) || /league score/i.test(hv)) { seasonStart = hc; break outerLoop; }
+        var hv = String((values[hr] || [])[hc] || '').toLowerCase().trim();
+        if (/^week\s*1$/.test(hv) || /^league\s*score/i.test(hv)) { seasonStart = hc; break outerLoop; }
       }
     }
-    if (seasonStart === cols) seasonStart = fc; // fallback
+    if (seasonStart === cols) seasonStart = fc;
   }
 
-  // Compute sticky left offsets
-  var leftPx = [];
-  var acc = 0;
+  // Sticky left offsets
+  var leftPx = [], acc = 0;
   for (var c = 0; c < fc; c++) {
     leftPx[c] = acc;
     acc += (LG_FC_WIDTHS[c] !== undefined ? LG_FC_WIDTHS[c] : 80);
   }
 
-  // Detect column roles
+  // Column roles
   var placeCol = isPoints ? 0 : -1;
   var teamCol  = isPoints ? 1 : 0;
   var nameCol  = isPoints ? 2 : 1;
 
-  // Find Total column (search header rows for "total")
+  // Find Total column
   var totalCol = -1;
   for (var hc2 = cols - 1; hc2 >= fc && totalCol < 0; hc2--) {
     for (var hr2 = 0; hr2 < fr; hr2++) {
-      if (/^tot/i.test(String(values[hr2][hc2] || '').trim())) { totalCol = hc2; break; }
+      if (/^tot/i.test(String((values[hr2] || [])[hc2] || '').trim())) { totalCol = hc2; break; }
     }
   }
 
-  // Build colgroup
+  // Find course/tee column — scan header rows for "course" or "tee"
+  var courseCol = -1;
+  for (var hr3 = 0; hr3 < fr && courseCol < 0; hr3++) {
+    for (var hc3 = 0; hc3 < fc; hc3++) {
+      var hv3 = String((values[hr3] || [])[hc3] || '').toLowerCase().trim();
+      if (/^cours|^tee$/.test(hv3)) { courseCol = hc3; break; }
+    }
+  }
+  // Fallback: scan first data rows for Back/Forward in frozen cols
+  if (courseCol < 0) {
+    dSearch: for (var dr = fr; dr < Math.min(fr + 6, rows); dr++) {
+      for (var dc = 0; dc < fc; dc++) {
+        if (/^(back|forward)\b/i.test(String((values[dr] || [])[dc] || '').trim())) {
+          courseCol = dc; break dSearch;
+        }
+      }
+    }
+  }
+  // Last resort: 3rd frozen col (index 2) when it isn't team/name
+  if (courseCol < 0 && fc >= 3 && 2 !== teamCol && 2 !== nameCol) courseCol = 2;
+
+  // Count visible columns (needed for colspan on title rows)
+  var visibleCols = 0;
+  for (var c = 0; c < cols; c++) {
+    if (isDiff && c >= fc && c < seasonStart) continue;
+    visibleCols++;
+  }
+
+  // ── Build table ──
   var html = '<div class="league-grid-outer"><table class="league-grid"><colgroup>';
   for (var c = 0; c < cols; c++) {
     if (isDiff && c >= fc && c < seasonStart) continue;
@@ -1729,18 +1860,38 @@ function renderLeagueDataGrid(res, container) {
   // Header rows
   html += '<thead>';
   for (var r = 0; r < fr; r++) {
-    html += '<tr>';
+    var rowData = values[r] || [];
+    // Count non-empty visible cells — title rows span everything
+    var nev = 0;
     for (var c = 0; c < cols; c++) {
       if (isDiff && c >= fc && c < seasonStart) continue;
-      var v  = String(values[r][c] || '');
-      var isFC = c < fc;
-      var isLastFC = isFC && c === fc - 1;
-      var fcCls = isFC ? (' lg-fc' + (isLastFC ? ' lg-fc-last' : '')) : '';
-      var fcSty = isFC ? (' style="left:' + leftPx[c] + 'px"') : '';
-      var extraCls = c === totalCol ? ' lg-total-cell' : '';
-      html += '<th class="' + fcCls + extraCls + '"' + fcSty + '>' + esc(v) + '</th>';
+      if (String(rowData[c] || '').trim()) nev++;
     }
-    html += '</tr>';
+    if (nev <= 1) {
+      var tv = '';
+      for (var c = 0; c < cols; c++) {
+        if (isDiff && c >= fc && c < seasonStart) continue;
+        tv = String(rowData[c] || '').trim();
+        if (tv) break;
+      }
+      html += '<tr><th colspan="' + visibleCols + '" class="lg-title-hdr">' + esc(tv) + '</th></tr>';
+    } else {
+      html += '<tr>';
+      for (var c = 0; c < cols; c++) {
+        if (isDiff && c >= fc && c < seasonStart) continue;
+        var v    = String(rowData[c] || '');
+        var isFC = c < fc;
+        var isLFC = isFC && c === fc - 1;
+        var cls2 = (isFC ? (' lg-fc' + (isLFC ? ' lg-fc-last' : '')) : '') +
+                   (c === totalCol ? ' lg-total-cell' : '');
+        var sp = [];
+        if (isFC) sp.push('left:' + leftPx[c] + 'px');
+        if (c === courseCol) sp.push('white-space:normal', 'text-align:center');
+        var sty = sp.length ? ' style="' + sp.join(';') + '"' : '';
+        html += '<th class="' + cls2.trim() + '"' + sty + '>' + esc(v) + '</th>';
+      }
+      html += '</tr>';
+    }
   }
   html += '</thead>';
 
@@ -1748,7 +1899,7 @@ function renderLeagueDataGrid(res, container) {
   html += '<tbody>';
   var prevTeamVal = null;
   for (var r = fr; r < rows; r++) {
-    var row = values[r];
+    var row = values[r] || [];
     var rawTeam = String(row[teamCol] == null ? '' : row[teamCol]).trim();
     var isNewTeam = rawTeam && rawTeam !== prevTeamVal;
     if (rawTeam) prevTeamVal = rawTeam;
@@ -1759,24 +1910,44 @@ function renderLeagueDataGrid(res, container) {
       var cv   = String(row[c] == null ? '' : row[c]).trim();
       var cvUp = cv.toUpperCase();
       var isFC = c < fc;
-      var isLastFC = isFC && c === fc - 1;
-      var fcCls = isFC ? (' lg-fc' + (isLastFC ? ' lg-fc-last' : '')) : '';
-      var fcSty = isFC ? (' style="left:' + leftPx[c] + 'px"') : '';
+      var isLFC2 = isFC && c === fc - 1;
+      var fcCls = isFC ? (' lg-fc' + (isLFC2 ? ' lg-fc-last' : '')) : '';
 
-      var cls = '';
+      var tdCls = '';
       if (c === placeCol && /^\d+$/.test(cv)) {
         var rank = parseInt(cv, 10);
-        cls = ' lg-place' + (rank <= 3 ? ' lg-rank-' + rank : '');
-      } else if (c === teamCol)   { cls = ' lg-team-lbl';
-      } else if (c === nameCol)   { cls = ' lg-name-lbl';
-      } else if (c < fc)          { cls = ' lg-info-lbl';
-      } else if (cvUp === 'ABS')  { cls = ' lg-abs-cell';
-      } else if (!cv)             { cls = ' lg-empty-cell';
-      } else if (c === totalCol)  { cls = ' lg-total-cell';
-      } else if (/^[\d.]+$/.test(cv)) { cls = ' lg-num-cell';
-      } else                      { cls = ' lg-course-cell'; }
+        tdCls = ' lg-place' + (rank <= 3 ? ' lg-rank-' + rank : '');
+      } else if (c === teamCol)  { tdCls = ' lg-team-lbl';
+      } else if (c === nameCol)  { tdCls = ' lg-name-lbl';
+      } else if (c < fc)         { tdCls = ' lg-info-lbl';
+      } else if (cvUp === 'ABS') { tdCls = ' lg-abs-cell';
+      } else if (!cv)            { tdCls = ' lg-empty-cell';
+      } else if (c === totalCol) { tdCls = ' lg-total-cell';
+      } else if (/^[\d.]+$/.test(cv)) { tdCls = ' lg-num-cell';
+      } else                     { tdCls = ' lg-course-cell'; }
 
-      html += '<td class="' + fcCls + cls + '"' + fcSty + '>' + esc(cv) + '</td>';
+      // Style: left-position for frozen cols, white-space:normal for course/name
+      var tdSp = [];
+      if (isFC) tdSp.push('left:' + leftPx[c] + 'px');
+      if (c === courseCol || (c === nameCol && isPoints)) tdSp.push('white-space:normal');
+      var tdSty = tdSp.length ? ' style="' + tdSp.join(';') + '"' : '';
+
+      // Cell content: split course on first space, split Points names at midpoint
+      var cellContent;
+      if (c === courseCol && cv.indexOf(' ') > -1) {
+        var si = cv.indexOf(' ');
+        cellContent = esc(cv.slice(0, si)) + '<br><span style="opacity:0.7;font-size:10px">' + esc(cv.slice(si + 1)) + '</span>';
+      } else if (c === nameCol && isPoints && cv.indexOf(' ') > -1) {
+        var words = cv.split(' ');
+        if (words.length >= 4) {
+          var mid = Math.floor(words.length / 2);
+          cellContent = esc(words.slice(0, mid).join(' ')) + '<br>' + esc(words.slice(mid).join(' '));
+        } else { cellContent = esc(cv); }
+      } else {
+        cellContent = esc(cv);
+      }
+
+      html += '<td class="' + (fcCls + tdCls).trim() + '"' + tdSty + '>' + cellContent + '</td>';
     }
     html += '</tr>';
   }
